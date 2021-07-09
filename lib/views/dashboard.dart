@@ -1,6 +1,8 @@
 import 'package:carousel_slider/carousel_slider.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:pedometer/pedometer.dart';
+import 'package:liquid_progress_indicator/liquid_progress_indicator.dart';
 import 'package:rive/rive.dart';
 import 'package:shimmer/shimmer.dart';
 import 'package:tracker_app/repos/quotes_api.dart';
@@ -46,7 +48,15 @@ class _DashboardPageState extends State<DashboardPage> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 _topBar(),
-                _avatar(),
+                Row(
+                  children: [
+                    _avatar(),
+                    Flexible(
+                      child: _moodMeter(),
+                      flex: 0,
+                    )
+                  ],
+                ),
                 SizedBox(height: 32),
                 _bottom(),
                 SizedBox(
@@ -77,13 +87,35 @@ class _DashboardPageState extends State<DashboardPage> {
         future: quote,
         builder: (context, AsyncSnapshot<Quote> snapshot) {
           if (snapshot.data == null) {
-            return SizedBox(
-              width: 200,
-              height: 100,
+            return Card(
+              color: Colors.black,
+              shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(12)),
               child: Shimmer.fromColors(
-                  child: Container(),
-                  baseColor: Colors.amber,
-                  highlightColor: Colors.black),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.end,
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Container(
+                        margin: EdgeInsets.all(16),
+                        width: double.maxFinite,
+                        height: 70,
+                        decoration: BoxDecoration(
+                            color: Colors.grey[300],
+                            borderRadius: BorderRadius.circular(12)),
+                      ),
+                      Container(
+                        margin: EdgeInsets.all(16),
+                        width: 80,
+                        height: 20,
+                        decoration: BoxDecoration(
+                            color: Colors.grey[300],
+                            borderRadius: BorderRadius.circular(12)),
+                      )
+                    ],
+                  ),
+                  baseColor: Colors.grey,
+                  highlightColor: Colors.grey.shade100),
             );
           } else {
             return Card(
@@ -172,8 +204,10 @@ class _DashboardPageState extends State<DashboardPage> {
   //2A2F3A
 
   Widget _avatar() {
-    return SizedBox(
-        height: 300, child: RiveAnimation.asset("assets/mood_happy.riv"));
+    return Flexible(
+      child: SizedBox(
+          height: 300, child: RiveAnimation.asset("assets/mood_happy.riv")),
+    );
   }
 
   Widget _topBar() {
@@ -230,7 +264,8 @@ class _DashboardPageState extends State<DashboardPage> {
                 },
                 style: buttonStyle,
                 child: Padding(
-                  padding: const EdgeInsets.all(8.0),
+                  padding: const EdgeInsets.symmetric(
+                      vertical: 8.0, horizontal: 4.0),
                   child: Row(
                     mainAxisSize: MainAxisSize.min,
                     children: [
@@ -253,7 +288,8 @@ class _DashboardPageState extends State<DashboardPage> {
                 onPressed: () {},
                 style: buttonStyle,
                 child: Padding(
-                  padding: const EdgeInsets.all(8.0),
+                  padding: const EdgeInsets.symmetric(
+                      vertical: 8.0, horizontal: 4.0),
                   child: Row(
                     mainAxisSize: MainAxisSize.min,
                     children: [
@@ -284,7 +320,8 @@ class _DashboardPageState extends State<DashboardPage> {
                 },
                 style: buttonStyle,
                 child: Padding(
-                  padding: const EdgeInsets.all(8.0),
+                  padding: const EdgeInsets.symmetric(
+                      vertical: 8.0, horizontal: 4.0),
                   child: Row(
                     mainAxisSize: MainAxisSize.min,
                     children: [
@@ -304,28 +341,30 @@ class _DashboardPageState extends State<DashboardPage> {
                   ),
                 )),
             ElevatedButton(
-                onPressed: () {},
-                style: buttonStyle,
-                child: Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: Row(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      Image.asset(
-                        "assets/icon_read.png",
-                        width: 38,
-                        height: 38,
-                      ),
-                      SizedBox(
-                        width: 12,
-                      ),
-                      Text(
-                        "Read",
-                        style: TextStyle(fontSize: 20),
-                      ),
-                    ],
-                  ),
-                )),
+              onPressed: () {},
+              style: buttonStyle,
+              child: Padding(
+                padding:
+                    const EdgeInsets.symmetric(vertical: 8.0, horizontal: 4.0),
+                child: Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Image.asset(
+                      "assets/icon_read.png",
+                      width: 38,
+                      height: 38,
+                    ),
+                    SizedBox(
+                      width: 12,
+                    ),
+                    Text(
+                      "Read",
+                      style: TextStyle(fontSize: 20),
+                    ),
+                  ],
+                ),
+              ),
+            ),
           ],
         ),
       ],
@@ -333,7 +372,7 @@ class _DashboardPageState extends State<DashboardPage> {
   }
 
   Widget _carouselExercise() {
-    var steps = 30.0;
+    var steps = 0.3;
     return Card(
       color: Colors.black,
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
@@ -349,13 +388,33 @@ class _DashboardPageState extends State<DashboardPage> {
               child: CircularProgressIndicator(
                 value: steps,
                 strokeWidth: 6,
-                backgroundColor: Color(0xff66a1),
+                backgroundColor: Theme.of(context).scaffoldBackgroundColor,
                 valueColor: AlwaysStoppedAnimation(Colors.pink),
               ),
             ),
           ],
         ),
       ),
+    );
+  }
+
+  Widget _moodMeter() {
+    var moodValue = 0.35;
+    return Row(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        SizedBox(
+          width: 20,
+          height: 200,
+          child: LiquidLinearProgressIndicator(
+            value: moodValue,
+            valueColor: AlwaysStoppedAnimation<Color>(Colors.deepOrange),
+            borderRadius: 32,
+            backgroundColor: Colors.black,
+            direction: Axis.vertical,
+          ),
+        ),
+      ],
     );
   }
 }
