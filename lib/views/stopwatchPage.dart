@@ -80,6 +80,13 @@ class _StopwatchPageState extends State<StopwatchPage> {
         return true;
       },
       child: Scaffold(
+        appBar: AppBar(
+          backgroundColor: Colors.orange,
+          title: Text(
+            widget.activityType,
+            style: TextStyle(color: Colors.white),
+          ),
+        ),
         body: SafeArea(
           child: Center(
             child: Column(
