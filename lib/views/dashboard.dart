@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:shimmer/shimmer.dart';
 import 'package:tracker_app/repos/quotes_api.dart';
 import 'package:tracker_app/views/RiveTest.dart';
+import 'package:tracker_app/views/stopwatchPage.dart';
 
 class DashboardPage extends StatefulWidget {
   const DashboardPage({Key? key}) : super(key: key);
@@ -173,7 +174,15 @@ class _DashboardPageState extends State<DashboardPage> {
           runSpacing: 10,
           children: [
             ElevatedButton(
-                onPressed: () {},
+                onPressed: () {
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => StopwatchPage(
+                                activityType: "Work",
+                                colorTheme: Colors.yellow,
+                              )));
+                },
                 style: buttonStyle,
                 child: Padding(
                   padding: const EdgeInsets.all(8.0),
@@ -188,9 +197,16 @@ class _DashboardPageState extends State<DashboardPage> {
                       SizedBox(
                         width: 12,
                       ),
-                      Text(
-                        "Work",
-                        style: TextStyle(fontSize: 20),
+                      Hero(
+                        tag: "Work",
+                        child: Text("Work",
+                            style: Theme.of(context)
+                                .textTheme
+                                .headline1
+                                ?.copyWith(
+                                    fontSize: 20,
+                                    color: Colors.white,
+                                    fontWeight: FontWeight.bold)),
                       ),
                     ],
                   ),
@@ -219,7 +235,15 @@ class _DashboardPageState extends State<DashboardPage> {
                   ),
                 )),
             ElevatedButton(
-                onPressed: () {},
+                onPressed: () {
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => StopwatchPage(
+                                activityType: "Side Project",
+                                colorTheme: Colors.orange.shade600,
+                              )));
+                },
                 style: buttonStyle,
                 child: Padding(
                   padding: const EdgeInsets.all(8.0),
@@ -234,9 +258,16 @@ class _DashboardPageState extends State<DashboardPage> {
                       SizedBox(
                         width: 12,
                       ),
-                      Text(
-                        "Side Project",
-                        style: TextStyle(fontSize: 20),
+                      Hero(
+                        tag: "Side Project",
+                        child: Text("Side Project",
+                            style: Theme.of(context)
+                                .textTheme
+                                .headline1
+                                ?.copyWith(
+                                    fontSize: 20,
+                                    color: Colors.white,
+                                    fontWeight: FontWeight.bold)),
                       ),
                     ],
                   ),
