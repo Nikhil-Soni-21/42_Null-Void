@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:tracker_app/repos/quotes_api.dart';
 import 'package:tracker_app/widgets/coloredRoundedCard.dart';
 
 class DashboardPage extends StatefulWidget {
@@ -9,6 +10,13 @@ class DashboardPage extends StatefulWidget {
 }
 
 class _DashboardPageState extends State<DashboardPage> {
+  late Future<Quote> quote;
+  @override
+  void initState() {
+    quote = getQuote();
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -20,6 +28,8 @@ class _DashboardPageState extends State<DashboardPage> {
               mainAxisSize: MainAxisSize.min,
               mainAxisAlignment: MainAxisAlignment.start,
               children: [
+                _appTitle(),
+                SizedBox(height: 8),
                 _motivationCard(),
                 SizedBox(height: 16),
                 Flexible(flex: 2, child: _avatar()),
@@ -35,18 +45,48 @@ class _DashboardPageState extends State<DashboardPage> {
     );
   }
 
-  Widget _motivationCard() {
-    return Padding(
-      padding: const EdgeInsets.all(16.0),
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          Text("\" Nathu katta nikal bahut bakchodi ho rahi hai \"",
-              style: TextStyle(fontSize: 20)),
-          Text("-Mahatma Gandhi", style: TextStyle(fontSize: 16))
-        ],
-      ),
+  Widget _appTitle() {
+    return Column(
+      mainAxisSize: MainAxisSize.min,
+      mainAxisAlignment: MainAxisAlignment.start,
+      children: [
+        Text("Apex Predators",
+            style: TextStyle(
+              fontSize: 24,
+              fontWeight: FontWeight.bold,
+              color: Colors.white,
+            )),
+        SizedBox(height: 8),
+        Divider(
+          color: Colors.white,
+        ),
+      ],
     );
+  }
+
+  Widget _motivationCard() {
+    return FutureBuilder(
+        future: quote,
+        builder: (context, AsyncSnapshot<Quote> snapshot) {
+          return Padding(
+            padding: const EdgeInsets.all(10.0),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Text(snapshot.data?.quote ?? "Loading...",
+                    style: TextStyle(
+                      fontSize: 20,
+                      color: Colors.white,
+                    )),
+                Text(snapshot.data?.by ?? "",
+                    style: TextStyle(
+                      fontSize: 16,
+                      color: Colors.white,
+                    ))
+              ],
+            ),
+          );
+        });
   }
 
   // Widget _statusCard() {
@@ -94,6 +134,8 @@ class _DashboardPageState extends State<DashboardPage> {
   //   );
   // }
 
+  //2A2F3A
+
   Widget _avatar() {
     return Placeholder();
   }
@@ -101,10 +143,11 @@ class _DashboardPageState extends State<DashboardPage> {
   Widget _bottom() {
     return Column(
       children: [
-        Text(
-          "What do you want to do next?",
-          style: TextStyle(fontSize: 20),
-        ),
+        Text("What do you want to do next?",
+            style: TextStyle(
+              fontSize: 20,
+              color: Colors.white,
+            )),
         SizedBox(height: 10),
         Wrap(
           direction: Axis.horizontal,

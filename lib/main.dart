@@ -7,6 +7,7 @@ void main() {
     theme: ThemeData(
       primarySwatch: Colors.blue,
       primaryColor: Colors.blue,
+      scaffoldBackgroundColor: Color(0xFF2A2F3A),
     ),
     home: DashboardPage(),
   ));
