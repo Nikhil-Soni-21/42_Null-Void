@@ -226,7 +226,7 @@ class _DashboardPageState extends State<DashboardPage> {
                   Navigator.push(
                       context,
                       MaterialPageRoute(
-                          builder: (context) => StopWatchPage(
+                          builder: (context) => StopwatchPage(
                                 activityType: "Work",
                                 colorTheme: Colors.yellow,
                               )));
@@ -282,7 +282,7 @@ class _DashboardPageState extends State<DashboardPage> {
                   Navigator.push(
                       context,
                       MaterialPageRoute(
-                          builder: (context) => StopWatchPage(
+                          builder: (context) => StopwatchPage(
                                 activityType: "Side Project",
                                 colorTheme: Colors.yellow,
                               )));
