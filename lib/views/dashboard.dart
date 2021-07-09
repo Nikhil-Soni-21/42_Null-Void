@@ -6,6 +6,7 @@ import 'package:liquid_progress_indicator/liquid_progress_indicator.dart';
 import 'package:rive/rive.dart';
 import 'package:shimmer/shimmer.dart';
 import 'package:tracker_app/repos/quotes_api.dart';
+import 'package:tracker_app/repos/storage_api.dart';
 import 'package:tracker_app/views/stopwatchPage.dart';
 
 class DashboardPage extends StatefulWidget {
@@ -32,6 +33,8 @@ class _DashboardPageState extends State<DashboardPage> {
     }).onError((error) {
       print(error);
     });
+
+    getCarouselData();
     super.initState();
   }
 

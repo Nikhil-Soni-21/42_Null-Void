@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class StopwatchPage extends StatefulWidget {
   String activityType;
@@ -126,7 +127,7 @@ class _StopwatchPageState extends State<StopwatchPage> {
                     onPressed: _stopwatch.elapsedMilliseconds == 0
                         ? null
                         : () {
-                            //TODO
+                            storeData(context);
                           },
                     child: Padding(
                       padding: const EdgeInsets.fromLTRB(15, 0, 15, 0),
@@ -139,6 +140,25 @@ class _StopwatchPageState extends State<StopwatchPage> {
         ),
       ),
     );
+  }
+
+  void storeData(BuildContext context) async {
+    _stopwatch.stop();
+
+    ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+      content: Text(
+          "Good Job! Activity Saved : Time Worked : ${formatTime(_stopwatch.elapsedMilliseconds)} "),
+    ));
+
+    //saving to storage
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    int? oldTime = prefs.getInt("${widget.activityType}_timeToday");
+    if (oldTime != null)
+      oldTime += _stopwatch.elapsedMilliseconds;
+    else
+      oldTime = _stopwatch.elapsedMilliseconds;
+    prefs.setInt("${widget.activityType}_timeToday", oldTime);
+    _stopwatch.reset();
   }
 
   @override
