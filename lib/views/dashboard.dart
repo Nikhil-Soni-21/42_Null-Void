@@ -1,7 +1,8 @@
+import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
+import 'package:rive/rive.dart';
 import 'package:shimmer/shimmer.dart';
 import 'package:tracker_app/repos/quotes_api.dart';
-import 'package:tracker_app/views/RiveTest.dart';
 
 class DashboardPage extends StatefulWidget {
   const DashboardPage({Key? key}) : super(key: key);
@@ -34,8 +35,22 @@ class _DashboardPageState extends State<DashboardPage> {
                 _topBar(),
                 _avatar(),
                 SizedBox(height: 32),
-                Flexible(
-                  child: _bottom(),
+                _bottom(),
+                SizedBox(height: 32,),
+                CarouselSlider(
+                  items: [
+                    _motivationCard()
+                  ],
+                  options: CarouselOptions(
+                    height: 180,
+                    viewportFraction: 1,
+                    enlargeCenterPage: false,
+                    autoPlay: true,
+                    enableInfiniteScroll: true,
+                    autoPlayInterval: Duration(seconds: 5),
+                    autoPlayAnimationDuration: Duration(seconds: 1),
+                    autoPlayCurve: Curves.fastOutSlowIn
+                  ),
                 )
               ],
             ),
@@ -59,24 +74,38 @@ class _DashboardPageState extends State<DashboardPage> {
                   highlightColor: Colors.black),
             );
           } else {
-            return Padding(
-              padding: const EdgeInsets.all(10.0),
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  Text(snapshot.data?.quote ?? "Loading...",
-                      style: TextStyle(
-                        fontSize: 20,
-                        color: Colors.white,
-                      )),
-                  Text(
-                    snapshot.data?.by ?? "",
-                    style: TextStyle(
-                      fontSize: 16,
-                      color: Colors.white,
+            return Card(
+              color: Colors.black,
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(12)
+              ),
+              child: Padding(
+                padding: const EdgeInsets.all(16.0),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Text(
+                        "\"${snapshot.data?.quote}\"" ?? "",
+                        style: TextStyle(
+                          fontSize: 20,
+                          color: Colors.white,
+                        )),
+                    SizedBox(height: 22,),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.end,
+                      children: [
+                        Text(
+                          "-- ${snapshot.data?.by}" ?? "",
+                          style: TextStyle(
+                            fontSize: 16,
+                            color: Colors.white,
+                          ),
+                        ),
+                      ],
                     ),
-                  ),
-                ],
+                  ],
+                ),
               ),
             );
           }
@@ -131,7 +160,8 @@ class _DashboardPageState extends State<DashboardPage> {
   //2A2F3A
 
   Widget _avatar() {
-    return SizedBox(height: 300, child: RiveTest());
+    return SizedBox(
+        height: 300, child: RiveAnimation.asset("assets/mood_sad.riv"));
   }
 
   Widget _topBar() {
@@ -267,6 +297,30 @@ class _DashboardPageState extends State<DashboardPage> {
           ],
         ),
       ],
+    );
+  }
+
+  Widget _carouselExercise() {
+    var steps = 30.0;
+    return Padding(
+      padding: const EdgeInsets.all(12.0),
+      child: Card(
+        color: Colors.black,
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+        child: Padding(
+          padding: EdgeInsets.all(8),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              CircularProgressIndicator(
+                strokeWidth: 8,
+                value: steps,
+                backgroundColor: Colors.red,
+              )
+            ],
+          ),
+        ),
+      ),
     );
   }
 }

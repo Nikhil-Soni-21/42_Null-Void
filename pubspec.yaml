@@ -30,6 +30,7 @@ dependencies:
   cupertino_icons: ^1.0.2
   rive: ^0.7.22
   shimmer: ^2.0.0
+  carousel_slider: ^4.0.0
 
 dev_dependencies:
   flutter_test:
