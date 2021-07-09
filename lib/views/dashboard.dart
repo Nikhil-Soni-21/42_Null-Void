@@ -39,7 +39,8 @@ class _DashboardPageState extends State<DashboardPage> {
                 SizedBox(height: 32,),
                 CarouselSlider(
                   items: [
-                    _motivationCard()
+                    _motivationCard(),
+                    _carouselExercise()
                   ],
                   options: CarouselOptions(
                     height: 180,
@@ -161,11 +162,10 @@ class _DashboardPageState extends State<DashboardPage> {
 
   Widget _avatar() {
     return SizedBox(
-        height: 300, child: RiveAnimation.asset("assets/mood_sad.riv"));
+        height: 300, child: RiveAnimation.asset("assets/mood_happy.riv"));
   }
 
   Widget _topBar() {
-    var calories = 0;
     var steps = 0;
     return Row(
       mainAxisAlignment: MainAxisAlignment.end,
@@ -302,23 +302,26 @@ class _DashboardPageState extends State<DashboardPage> {
 
   Widget _carouselExercise() {
     var steps = 30.0;
-    return Padding(
-      padding: const EdgeInsets.all(12.0),
-      child: Card(
-        color: Colors.black,
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-        child: Padding(
-          padding: EdgeInsets.all(8),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              CircularProgressIndicator(
-                strokeWidth: 8,
-                value: steps,
-                backgroundColor: Colors.red,
-              )
-            ],
-          ),
+    return Card(
+      color: Colors.black,
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+      child: Padding(
+        padding: EdgeInsets.all(16),
+        child: Row(
+          mainAxisSize: MainAxisSize.max,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            SizedBox(
+              width: 100,
+              height: 100,
+              child: CircularProgressIndicator(
+                value:steps,
+                strokeWidth: 6,
+                backgroundColor: Color(0xff66a1),
+                valueColor: AlwaysStoppedAnimation(Colors.pink),
+              ),
+            ),
+          ],
         ),
       ),
     );
