@@ -419,12 +419,12 @@ class _DashboardPageState extends State<DashboardPage> {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Image.asset("assets/happy_smiley.png"),
+              Image.asset("assets/happy_smiley.png", height: 24,width: 24,),
               Padding(
-                padding: const EdgeInsets.only(top: 30.0, bottom: 30.0),
-                child: Image.asset("assets/normal_smiley.png"),
+                padding: const EdgeInsets.only(top: 64.0, bottom: 64.0),
+                child: Image.asset("assets/normal_smiley.png",height: 24,width: 24,),
               ),
-              Image.asset("assets/sad_smiley.png"),
+              Image.asset("assets/sad_smiley.png",height: 24,width: 24,),
             ],
           ),
         ),

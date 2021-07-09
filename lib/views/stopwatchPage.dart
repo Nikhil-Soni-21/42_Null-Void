@@ -1,10 +1,12 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:rive/rive.dart';
 
 class StopwatchPage extends StatefulWidget {
   String activityType;
   Color colorTheme;
+
   StopwatchPage({
     Key? key,
     required this.activityType,
@@ -18,6 +20,7 @@ class StopwatchPage extends StatefulWidget {
 class _StopwatchPageState extends State<StopwatchPage> {
   late Stopwatch _stopwatch;
   late Timer _timer;
+
   @override
   void initState() {
     super.initState();
@@ -52,25 +55,26 @@ class _StopwatchPageState extends State<StopwatchPage> {
           return true;
         else {
           var response = await showDialog(
-              context: context,
-              builder: (context) => new AlertDialog(
-                    title: Text("Exit?"),
-                    content: Text("You will lose progress if you exit"),
-                    actions: [
-                      TextButton(
-                        onPressed: () {
-                          return Navigator.of(context).pop(false);
-                        },
-                        child: Text("Cancel"),
-                      ),
-                      TextButton(
-                        onPressed: () {
-                          return Navigator.of(context).pop(true);
-                        },
-                        child: Text("Exit"),
-                      ),
-                    ],
-                  ));
+            context: context,
+            builder: (context) => new AlertDialog(
+              title: Text("Exit?"),
+              content: Text("You will lose progress if you exit"),
+              actions: [
+                TextButton(
+                  onPressed: () {
+                    return Navigator.of(context).pop(false);
+                  },
+                  child: Text("Cancel"),
+                ),
+                TextButton(
+                  onPressed: () {
+                    return Navigator.of(context).pop(true);
+                  },
+                  child: Text("Exit"),
+                ),
+              ],
+            ),
+          );
           if (response)
             return true;
           else
@@ -87,7 +91,7 @@ class _StopwatchPageState extends State<StopwatchPage> {
                 SizedBox(
                   height: 100,
                   width: 200,
-                  child: Placeholder(),
+                  child: RiveAnimation.asset("assets/clock.riv"),
                 ),
                 SizedBox(height: 10),
                 Hero(
