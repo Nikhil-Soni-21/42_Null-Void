@@ -6,6 +6,7 @@ import 'package:liquid_progress_indicator/liquid_progress_indicator.dart';
 import 'package:rive/rive.dart';
 import 'package:shimmer/shimmer.dart';
 import 'package:tracker_app/repos/quotes_api.dart';
+import 'package:tracker_app/repos/storage_api.dart';
 import 'package:tracker_app/views/stopwatchPage.dart';
 import 'package:tracker_app/views/yoga.dart';
 
@@ -19,7 +20,9 @@ class DashboardPage extends StatefulWidget {
 class _DashboardPageState extends State<DashboardPage> {
   late Future<Quote> quote;
   late final Stream<StepCount> _stepCountStream;
+  Map<String, int> carouselData = Map();
   int steps = 0;
+  double? totalScore;
   @override
   void initState() {
     quote = getQuote();
@@ -32,6 +35,12 @@ class _DashboardPageState extends State<DashboardPage> {
       });
     }).onError((error) {
       print(error);
+    });
+
+    getCarouselData().then((value) {
+      carouselData = value;
+      totalScore = calculateScore(value);
+      setState(() {});
     });
     super.initState();
   }
@@ -64,9 +73,13 @@ class _DashboardPageState extends State<DashboardPage> {
                   height: 32,
                 ),
                 CarouselSlider(
-                  items: [_motivationCard(), _carouselExerciseProgress(),
-                    _carouselWorkProgress(), _carouselSideProjectsProgress(),
-                    _carouselYogaProgress()],
+                  items: [
+                    _motivationCard(),
+                    _carouselExerciseProgress(),
+                    _carouselWorkProgress(),
+                    _carouselSideProjectsProgress(),
+                    _carouselYogaProgress()
+                  ],
                   options: CarouselOptions(
                       height: 180,
                       viewportFraction: 1,
@@ -158,53 +171,6 @@ class _DashboardPageState extends State<DashboardPage> {
           }
         });
   }
-
-  // Widget _statusCard() {
-  //   return Padding(
-  //     padding: const EdgeInsets.all(16.0),
-  //     child: Column(
-  //       mainAxisSize: MainAxisSize.min,
-  //       children: [
-  //         Text("Status: ",
-  //             style: TextStyle(
-  //                 fontSize: 22,
-  //                 fontWeight: FontWeight.bold,
-  //                 color: Colors.white)),
-  //         Text("Jinda hu bsdk",
-  //             style: TextStyle(
-  //                 fontSize: 18,
-  //                 fontWeight: FontWeight.bold,
-  //                 color: Colors.white)),
-  //         Wrap(
-  //           direction: Axis.horizontal,
-  //           children: [
-  //             Text("Physical Health: ",
-  //                 style: TextStyle(
-  //                     fontSize: 18,
-  //                     fontWeight: FontWeight.bold,
-  //                     color: Colors.white)),
-  //             Text(" nahi degi ",
-  //                 style: TextStyle(fontSize: 18, color: Colors.white)),
-  //           ],
-  //         ),
-  //         Wrap(
-  //           direction: Axis.horizontal,
-  //           children: [
-  //             Text("Mental Health: ",
-  //                 style: TextStyle(
-  //                     fontSize: 18,
-  //                     fontWeight: FontWeight.bold,
-  //                     color: Colors.white)),
-  //             Text("konsi? ",
-  //                 style: TextStyle(fontSize: 18, color: Colors.white))
-  //           ],
-  //         ),
-  //       ],
-  //     ),
-  //   );
-  // }
-
-  //2A2F3A
 
   Widget _avatar() {
     return Flexible(
@@ -381,33 +347,47 @@ class _DashboardPageState extends State<DashboardPage> {
   }
 
   Widget _carouselWorkProgress() {
-    var steps = 0.3;
+    double steps = 0;
+    if (carouselData["Work_timeToday"] != null &&
+        carouselData["Work_goal"] != null)
+      steps = (carouselData["Work_timeToday"]! / carouselData["Work_goal"]!);
+
     return Card(
       color: Colors.black,
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
       child: Padding(
         padding: EdgeInsets.all(16),
-        child: Row(
-          mainAxisSize: MainAxisSize.max,
-          crossAxisAlignment: CrossAxisAlignment.start,
+        child: Column(
           children: [
-            SizedBox(
-              width: 100,
-              height: 100,
-              child: CircularProgressIndicator(
-                value: steps,
-                strokeWidth: 6,
-                backgroundColor: Theme.of(context).scaffoldBackgroundColor,
-                valueColor: AlwaysStoppedAnimation(Colors.pink),
-              ),
+            Row(
+              mainAxisSize: MainAxisSize.max,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                SizedBox(
+                  width: 100,
+                  height: 100,
+                  child: CircularProgressIndicator(
+                    value: steps,
+                    strokeWidth: 6,
+                    backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+                    valueColor: AlwaysStoppedAnimation(Colors.pink),
+                  ),
+                ),
+                Padding(
+                  padding: const EdgeInsets.only(left: 40.0, top: 24),
+                  child: Text(
+                    "Work Progress",
+                    style: TextStyle(fontSize: 24.0, color: Colors.white),
+                  ),
+                )
+              ],
             ),
-            Padding(
-              padding: const EdgeInsets.only(left: 40.0, top: 24),
-              child: Text(
-                "Work Progress",
-                style: TextStyle(fontSize: 24.0, color: Colors.white),
-              ),
-            )
+            Text(
+                "Time Spent: ${formatTime(carouselData["Work_timeToday"]) ?? "0"}",
+                style: TextStyle(fontSize: 16.0, color: Colors.white)),
+            Text(
+                "Goal for today: ${formatTime(carouselData["Work_goal"]) ?? "0"}",
+                style: TextStyle(fontSize: 16.0, color: Colors.white))
           ],
         ),
       ),
@@ -449,33 +429,47 @@ class _DashboardPageState extends State<DashboardPage> {
   }
 
   Widget _carouselSideProjectsProgress() {
-    var steps = 0.3;
+    double steps = 0;
+    if (carouselData["Side Project_timeToday"] != null &&
+        carouselData["Side Project_goal"] != null)
+      steps = (carouselData["Side Project_timeToday"]! /
+          carouselData["Side Project_goal"]!);
     return Card(
       color: Colors.black,
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
       child: Padding(
         padding: EdgeInsets.all(16),
-        child: Row(
-          mainAxisSize: MainAxisSize.max,
-          crossAxisAlignment: CrossAxisAlignment.start,
+        child: Column(
           children: [
-            SizedBox(
-              width: 100,
-              height: 100,
-              child: CircularProgressIndicator(
-                value: steps,
-                strokeWidth: 6,
-                backgroundColor: Theme.of(context).scaffoldBackgroundColor,
-                valueColor: AlwaysStoppedAnimation(Colors.blue.shade200),
-              ),
+            Row(
+              mainAxisSize: MainAxisSize.max,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                SizedBox(
+                  width: 100,
+                  height: 100,
+                  child: CircularProgressIndicator(
+                    value: steps,
+                    strokeWidth: 6,
+                    backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+                    valueColor: AlwaysStoppedAnimation(Colors.blue.shade200),
+                  ),
+                ),
+                Padding(
+                  padding: const EdgeInsets.only(left: 45.0, top: 20),
+                  child: Text(
+                    "Side Project\n  Progress",
+                    style: TextStyle(fontSize: 24.0, color: Colors.white),
+                  ),
+                )
+              ],
             ),
-            Padding(
-              padding: const EdgeInsets.only(left: 45.0, top: 20),
-              child: Text(
-                "Side Project\n  Progress",
-                style: TextStyle(fontSize: 24.0, color: Colors.white),
-              ),
-            )
+            Text(
+                "Time Spent: ${formatTime(carouselData["Side Project_timeToday"]) ?? "0"}",
+                style: TextStyle(fontSize: 16.0, color: Colors.white)),
+            Text(
+                "Goal for today: ${formatTime(carouselData["Side Project_goal"]) ?? "0"}",
+                style: TextStyle(fontSize: 16.0, color: Colors.white))
           ],
         ),
       ),
@@ -517,7 +511,7 @@ class _DashboardPageState extends State<DashboardPage> {
   }
 
   Widget _moodMeter() {
-    var moodValue = 0.35;
+    var moodValue = totalScore ?? 0.6;
     return Row(
       mainAxisSize: MainAxisSize.min,
       children: [
@@ -537,16 +531,25 @@ class _DashboardPageState extends State<DashboardPage> {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Image.asset("assets/happy_smiley.png"),
+              Image.asset("assets/happy_smiley.png", height: 24,width: 24,),
               Padding(
-                padding: const EdgeInsets.only(top: 30.0, bottom: 30.0),
-                child: Image.asset("assets/normal_smiley.png"),
+                padding: const EdgeInsets.only(top: 64.0, bottom: 64.0),
+                child: Image.asset("assets/normal_smiley.png",height: 24,width: 24,),
               ),
-              Image.asset("assets/sad_smiley.png"),
+              Image.asset("assets/sad_smiley.png",height: 24,width: 24,),
             ],
           ),
         ),
       ],
     );
+  }
+
+  String? formatTime(int? milliseconds) {
+    if (milliseconds == null) return null;
+    var secs = milliseconds ~/ 1000;
+    var hours = (secs ~/ 3600).toString().padLeft(2, '0');
+    var minutes = ((secs % 3600) ~/ 60).toString().padLeft(2, '0');
+    var seconds = (secs % 60).toString().padLeft(2, '0');
+    return "$hours:$minutes:$seconds";
   }
 }
