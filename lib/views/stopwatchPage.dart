@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:rive/rive.dart';
 
 class StopwatchPage extends StatefulWidget {
   String activityType;
@@ -86,11 +87,10 @@ class _StopwatchPageState extends State<StopwatchPage> {
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 SizedBox(
-                  height: 100,
-                  width: 200,
-                  child: Placeholder(),
+                  height: 300,
+                  width: 300,
+                  child: RiveAnimation.asset("assets/clock.riv"),
                 ),
-                SizedBox(height: 10),
                 Hero(
                   tag: widget.activityType,
                   child: Text(widget.activityType,
