@@ -6,7 +6,9 @@ import 'package:liquid_progress_indicator/liquid_progress_indicator.dart';
 import 'package:rive/rive.dart';
 import 'package:shimmer/shimmer.dart';
 import 'package:tracker_app/repos/quotes_api.dart';
+import 'package:tracker_app/repos/storage_api.dart';
 import 'package:tracker_app/views/stopwatchPage.dart';
+import 'package:tracker_app/views/yoga.dart';
 
 class DashboardPage extends StatefulWidget {
   const DashboardPage({Key? key}) : super(key: key);
@@ -18,7 +20,9 @@ class DashboardPage extends StatefulWidget {
 class _DashboardPageState extends State<DashboardPage> {
   late Future<Quote> quote;
   late final Stream<StepCount> _stepCountStream;
+  Map<String, int> carouselData = Map();
   int steps = 0;
+  double? totalScore;
   @override
   void initState() {
     quote = getQuote();
@@ -31,6 +35,12 @@ class _DashboardPageState extends State<DashboardPage> {
       });
     }).onError((error) {
       print(error);
+    });
+
+    getCarouselData().then((value) {
+      carouselData = value;
+      totalScore = calculateScore(value);
+      setState(() {});
     });
     super.initState();
   }
@@ -63,7 +73,13 @@ class _DashboardPageState extends State<DashboardPage> {
                   height: 32,
                 ),
                 CarouselSlider(
-                  items: [_motivationCard(), _carouselExercise()],
+                  items: [
+                    _motivationCard(),
+                    _carouselExerciseProgress(),
+                    _carouselWorkProgress(),
+                    _carouselSideProjectsProgress(),
+                    _carouselYogaProgress()
+                  ],
                   options: CarouselOptions(
                       height: 180,
                       viewportFraction: 1,
@@ -155,53 +171,6 @@ class _DashboardPageState extends State<DashboardPage> {
           }
         });
   }
-
-  // Widget _statusCard() {
-  //   return Padding(
-  //     padding: const EdgeInsets.all(16.0),
-  //     child: Column(
-  //       mainAxisSize: MainAxisSize.min,
-  //       children: [
-  //         Text("Status: ",
-  //             style: TextStyle(
-  //                 fontSize: 22,
-  //                 fontWeight: FontWeight.bold,
-  //                 color: Colors.white)),
-  //         Text("Jinda hu bsdk",
-  //             style: TextStyle(
-  //                 fontSize: 18,
-  //                 fontWeight: FontWeight.bold,
-  //                 color: Colors.white)),
-  //         Wrap(
-  //           direction: Axis.horizontal,
-  //           children: [
-  //             Text("Physical Health: ",
-  //                 style: TextStyle(
-  //                     fontSize: 18,
-  //                     fontWeight: FontWeight.bold,
-  //                     color: Colors.white)),
-  //             Text(" nahi degi ",
-  //                 style: TextStyle(fontSize: 18, color: Colors.white)),
-  //           ],
-  //         ),
-  //         Wrap(
-  //           direction: Axis.horizontal,
-  //           children: [
-  //             Text("Mental Health: ",
-  //                 style: TextStyle(
-  //                     fontSize: 18,
-  //                     fontWeight: FontWeight.bold,
-  //                     color: Colors.white)),
-  //             Text("konsi? ",
-  //                 style: TextStyle(fontSize: 18, color: Colors.white))
-  //           ],
-  //         ),
-  //       ],
-  //     ),
-  //   );
-  // }
-
-  //2A2F3A
 
   Widget _avatar() {
     return Flexible(
@@ -341,7 +310,13 @@ class _DashboardPageState extends State<DashboardPage> {
                   ),
                 )),
             ElevatedButton(
-              onPressed: () {},
+              onPressed: () {
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) =>
+                            yoga()));
+              },
               style: buttonStyle,
               child: Padding(
                 padding:
@@ -350,7 +325,7 @@ class _DashboardPageState extends State<DashboardPage> {
                   mainAxisSize: MainAxisSize.min,
                   children: [
                     Image.asset(
-                      "assets/icon_read.png",
+                      "assets/icon_yoga.png",
                       width: 38,
                       height: 38,
                     ),
@@ -358,7 +333,7 @@ class _DashboardPageState extends State<DashboardPage> {
                       width: 12,
                     ),
                     Text(
-                      "Read",
+                      "Yoga",
                       style: TextStyle(fontSize: 20),
                     ),
                   ],
@@ -371,7 +346,55 @@ class _DashboardPageState extends State<DashboardPage> {
     );
   }
 
-  Widget _carouselExercise() {
+  Widget _carouselWorkProgress() {
+    double steps = 0;
+    if (carouselData["Work_timeToday"] != null &&
+        carouselData["Work_goal"] != null)
+      steps = (carouselData["Work_timeToday"]! / carouselData["Work_goal"]!);
+
+    return Card(
+      color: Colors.black,
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+      child: Padding(
+        padding: EdgeInsets.all(16),
+        child: Column(
+          children: [
+            Row(
+              mainAxisSize: MainAxisSize.max,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                SizedBox(
+                  width: 100,
+                  height: 100,
+                  child: CircularProgressIndicator(
+                    value: steps,
+                    strokeWidth: 6,
+                    backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+                    valueColor: AlwaysStoppedAnimation(Colors.pink),
+                  ),
+                ),
+                Padding(
+                  padding: const EdgeInsets.only(left: 40.0, top: 24),
+                  child: Text(
+                    "Work Progress",
+                    style: TextStyle(fontSize: 24.0, color: Colors.white),
+                  ),
+                )
+              ],
+            ),
+            Text(
+                "Time Spent: ${formatTime(carouselData["Work_timeToday"]) ?? "0"}",
+                style: TextStyle(fontSize: 16.0, color: Colors.white)),
+            Text(
+                "Goal for today: ${formatTime(carouselData["Work_goal"]) ?? "0"}",
+                style: TextStyle(fontSize: 16.0, color: Colors.white))
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _carouselExerciseProgress() {
     var steps = 0.3;
     return Card(
       color: Colors.black,
@@ -389,9 +412,98 @@ class _DashboardPageState extends State<DashboardPage> {
                 value: steps,
                 strokeWidth: 6,
                 backgroundColor: Theme.of(context).scaffoldBackgroundColor,
-                valueColor: AlwaysStoppedAnimation(Colors.pink),
+                valueColor: AlwaysStoppedAnimation(Colors.orange),
               ),
             ),
+            Padding(
+              padding: const EdgeInsets.only(left: 40.0, top: 24),
+              child: Text(
+                "Exercise Progress",
+                style: TextStyle(fontSize: 24.0, color: Colors.white),
+              ),
+            )
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _carouselSideProjectsProgress() {
+    double steps = 0;
+    if (carouselData["Side Project_timeToday"] != null &&
+        carouselData["Side Project_goal"] != null)
+      steps = (carouselData["Side Project_timeToday"]! /
+          carouselData["Side Project_goal"]!);
+    return Card(
+      color: Colors.black,
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+      child: Padding(
+        padding: EdgeInsets.all(16),
+        child: Column(
+          children: [
+            Row(
+              mainAxisSize: MainAxisSize.max,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                SizedBox(
+                  width: 100,
+                  height: 100,
+                  child: CircularProgressIndicator(
+                    value: steps,
+                    strokeWidth: 6,
+                    backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+                    valueColor: AlwaysStoppedAnimation(Colors.blue.shade200),
+                  ),
+                ),
+                Padding(
+                  padding: const EdgeInsets.only(left: 45.0, top: 20),
+                  child: Text(
+                    "Side Project\n  Progress",
+                    style: TextStyle(fontSize: 24.0, color: Colors.white),
+                  ),
+                )
+              ],
+            ),
+            Text(
+                "Time Spent: ${formatTime(carouselData["Side Project_timeToday"]) ?? "0"}",
+                style: TextStyle(fontSize: 16.0, color: Colors.white)),
+            Text(
+                "Goal for today: ${formatTime(carouselData["Side Project_goal"]) ?? "0"}",
+                style: TextStyle(fontSize: 16.0, color: Colors.white))
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _carouselYogaProgress() {
+    var steps = 0.3;
+    return Card(
+      color: Colors.black,
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+      child: Padding(
+        padding: EdgeInsets.all(16),
+        child: Row(
+          mainAxisSize: MainAxisSize.max,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            SizedBox(
+              width: 100,
+              height: 100,
+              child: CircularProgressIndicator(
+                value: steps,
+                strokeWidth: 6,
+                backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+                valueColor: AlwaysStoppedAnimation(Colors.greenAccent),
+              ),
+            ),
+            Padding(
+              padding: const EdgeInsets.only(left: 40.0, top: 24),
+              child: Text(
+                "Yoga Progress",
+                style: TextStyle(fontSize: 24.0, color: Colors.white),
+              ),
+            )
           ],
         ),
       ),
@@ -399,7 +511,7 @@ class _DashboardPageState extends State<DashboardPage> {
   }
 
   Widget _moodMeter() {
-    var moodValue = 0.35;
+    var moodValue = totalScore ?? 0.6;
     return Row(
       mainAxisSize: MainAxisSize.min,
       children: [
@@ -430,5 +542,14 @@ class _DashboardPageState extends State<DashboardPage> {
         ),
       ],
     );
+  }
+
+  String? formatTime(int? milliseconds) {
+    if (milliseconds == null) return null;
+    var secs = milliseconds ~/ 1000;
+    var hours = (secs ~/ 3600).toString().padLeft(2, '0');
+    var minutes = ((secs % 3600) ~/ 60).toString().padLeft(2, '0');
+    var seconds = (secs % 60).toString().padLeft(2, '0');
+    return "$hours:$minutes:$seconds";
   }
 }

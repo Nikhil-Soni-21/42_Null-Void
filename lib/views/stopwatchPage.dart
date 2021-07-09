@@ -1,34 +1,29 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:rive/rive.dart';
 
-class StopWatchPage extends StatefulWidget {
+class StopwatchPage extends StatefulWidget {
   String activityType;
   Color colorTheme;
-
-  StopWatchPage({
+  StopwatchPage({
     Key? key,
     required this.activityType,
     required this.colorTheme,
   }) : super(key: key);
 
   @override
-  _StopWatchPageState createState() => _StopWatchPageState();
+  _StopwatchPageState createState() => _StopwatchPageState();
 }
 
-class _StopWatchPageState extends State<StopWatchPage>
-    with SingleTickerProviderStateMixin {
+class _StopwatchPageState extends State<StopwatchPage> {
   late Stopwatch _stopwatch;
   late Timer _timer;
-  late AnimationController _playPauseController;
-
   @override
   void initState() {
     super.initState();
     _stopwatch = Stopwatch();
-    _playPauseController =
-        AnimationController(vsync: this, duration: Duration(microseconds: 300));
     _timer = new Timer.periodic(new Duration(milliseconds: 30), (timer) {
       setState(() {});
     });
@@ -43,15 +38,12 @@ class _StopWatchPageState extends State<StopWatchPage>
   }
 
   void handleStartStop() {
-    setState(() {
-      if (_stopwatch.isRunning) {
-        _playPauseController.reverse();
-        _stopwatch.stop();
-      } else {
-        _playPauseController.forward();
-        _stopwatch.start();
-      }
-    });
+    if (_stopwatch.isRunning) {
+      _stopwatch.stop();
+    } else {
+      _stopwatch.start();
+    }
+    setState(() {}); // re-render the page
   }
 
   @override
@@ -86,25 +78,19 @@ class _StopWatchPageState extends State<StopWatchPage>
           else
             return false;
         }
+        return true;
       },
       child: Scaffold(
-        appBar: AppBar(
-          backgroundColor: Theme.of(context).scaffoldBackgroundColor,
-          elevation: 0,
-        ),
         body: SafeArea(
           child: Center(
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 SizedBox(
-                  height: 180,
-                  width: 180,
-                  child: RiveAnimation.asset(
-                    "assets/clock.riv",
-                  ),
+                  height: 300,
+                  width: 300,
+                  child: RiveAnimation.asset("assets/clock.riv"),
                 ),
-                SizedBox(height: 10),
                 Hero(
                   tag: widget.activityType,
                   child: Text(widget.activityType,
@@ -117,49 +103,37 @@ class _StopWatchPageState extends State<StopWatchPage>
                 Text(formatTime(_stopwatch.elapsedMilliseconds),
                     style: TextStyle(fontSize: 48.0, color: Colors.white)),
                 SizedBox(height: 10),
-                Row(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    FloatingActionButton(
-                      onPressed: handleStartStop,
-                      tooltip: _stopwatch.isRunning
-                          ? 'Pause ${widget.activityType}'
-                          : 'Start ${widget.activityType}',
-                      elevation: 0,
-                      child: AnimatedIcon(
-                        icon: AnimatedIcons.play_pause,
-                        progress: _playPauseController,
-                      ),
-                    ),
-                    SizedBox(width: 10),
-                    FloatingActionButton(
-                      onPressed: () {
-                        setState(() {
-                          _stopwatch.reset();
-                        });
-                      },
-                      backgroundColor: Colors.red,
-                      child: Icon(Icons.stop_rounded),
-                    ),
-                  ],
+                ElevatedButton(
+                    onPressed: handleStartStop,
+                    child: Text(_stopwatch.isRunning
+                        ? 'Pause ${widget.activityType}'
+                        : 'Start ${widget.activityType}')),
+                SizedBox(height: 10),
+                ElevatedButton(
+                  onPressed: () {
+                    _stopwatch.reset();
+                    setState(() {});
+                  },
+                  child: Text(
+                    "Reset",
+                  ),
                 ),
                 SizedBox(height: 10),
                 Text("You cannot leave this page while the timer is running",
                     style: TextStyle(color: Colors.white)),
                 SizedBox(height: 10),
                 ElevatedButton(
-                  style: ElevatedButton.styleFrom(primary: widget.colorTheme),
-                  onPressed: _stopwatch.elapsedMilliseconds == 0
-                      ? null
-                      : () {
-                          //TODO
-                        },
-                  child: Padding(
-                    padding: const EdgeInsets.fromLTRB(15, 0, 15, 0),
-                    child: Text("Complete Activity",
-                        style: TextStyle(color: Colors.black)),
-                  ),
-                ),
+                    style: ElevatedButton.styleFrom(primary: widget.colorTheme),
+                    onPressed: _stopwatch.elapsedMilliseconds == 0
+                        ? null
+                        : () {
+                            storeData(context);
+                          },
+                    child: Padding(
+                      padding: const EdgeInsets.fromLTRB(15, 0, 15, 0),
+                      child: Text("Complete Activity",
+                          style: TextStyle(color: Colors.black)),
+                    )),
               ],
             ),
           ),
@@ -168,10 +142,28 @@ class _StopWatchPageState extends State<StopWatchPage>
     );
   }
 
+  void storeData(BuildContext context) async {
+    _stopwatch.stop();
+
+    ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+      content: Text(
+          "Good Job! Activity Saved : Time Worked : ${formatTime(_stopwatch.elapsedMilliseconds)} "),
+    ));
+
+    //saving to storage
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    int? oldTime = prefs.getInt("${widget.activityType}_timeToday");
+    if (oldTime != null)
+      oldTime += _stopwatch.elapsedMilliseconds;
+    else
+      oldTime = _stopwatch.elapsedMilliseconds;
+    prefs.setInt("${widget.activityType}_timeToday", oldTime);
+    _stopwatch.reset();
+  }
+
   @override
   void dispose() {
     _timer.cancel();
-    _playPauseController.dispose();
     super.dispose();
   }
 }
