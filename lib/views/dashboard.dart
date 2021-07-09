@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:rive/rive.dart';
 import 'package:shimmer/shimmer.dart';
 import 'package:tracker_app/repos/quotes_api.dart';
+import 'package:tracker_app/views/stopwatchPage.dart';
 
 class DashboardPage extends StatefulWidget {
   const DashboardPage({Key? key}) : super(key: key);
@@ -36,22 +37,20 @@ class _DashboardPageState extends State<DashboardPage> {
                 _avatar(),
                 SizedBox(height: 32),
                 _bottom(),
-                SizedBox(height: 32,),
+                SizedBox(
+                  height: 32,
+                ),
                 CarouselSlider(
-                  items: [
-                    _motivationCard(),
-                    _carouselExercise()
-                  ],
+                  items: [_motivationCard(), _carouselExercise()],
                   options: CarouselOptions(
-                    height: 180,
-                    viewportFraction: 1,
-                    enlargeCenterPage: false,
-                    autoPlay: true,
-                    enableInfiniteScroll: true,
-                    autoPlayInterval: Duration(seconds: 5),
-                    autoPlayAnimationDuration: Duration(seconds: 1),
-                    autoPlayCurve: Curves.fastOutSlowIn
-                  ),
+                      height: 180,
+                      viewportFraction: 1,
+                      enlargeCenterPage: false,
+                      autoPlay: true,
+                      enableInfiniteScroll: true,
+                      autoPlayInterval: Duration(seconds: 5),
+                      autoPlayAnimationDuration: Duration(seconds: 1),
+                      autoPlayCurve: Curves.fastOutSlowIn),
                 )
               ],
             ),
@@ -78,26 +77,26 @@ class _DashboardPageState extends State<DashboardPage> {
             return Card(
               color: Colors.black,
               shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(12)
-              ),
+                  borderRadius: BorderRadius.circular(12)),
               child: Padding(
                 padding: const EdgeInsets.all(16.0),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.stretch,
                   mainAxisSize: MainAxisSize.min,
                   children: [
-                    Text(
-                        "\"${snapshot.data?.quote}\"" ?? "",
+                    Text("\"${snapshot.data?.quote ?? ""}\"",
                         style: TextStyle(
                           fontSize: 20,
                           color: Colors.white,
                         )),
-                    SizedBox(height: 22,),
+                    SizedBox(
+                      height: 22,
+                    ),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.end,
                       children: [
                         Text(
-                          "-- ${snapshot.data?.by}" ?? "",
+                          "-- ${snapshot.data?.by ?? ""}",
                           style: TextStyle(
                             fontSize: 16,
                             color: Colors.white,
@@ -203,7 +202,15 @@ class _DashboardPageState extends State<DashboardPage> {
           runSpacing: 10,
           children: [
             ElevatedButton(
-                onPressed: () {},
+                onPressed: () {
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => StopwatchPage(
+                                activityType: "Work",
+                                colorTheme: Colors.yellow,
+                              )));
+                },
                 style: buttonStyle,
                 child: Padding(
                   padding: const EdgeInsets.all(8.0),
@@ -249,7 +256,15 @@ class _DashboardPageState extends State<DashboardPage> {
                   ),
                 )),
             ElevatedButton(
-                onPressed: () {},
+                onPressed: () {
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => StopwatchPage(
+                                activityType: "Side Project",
+                                colorTheme: Colors.yellow,
+                              )));
+                },
                 style: buttonStyle,
                 child: Padding(
                   padding: const EdgeInsets.all(8.0),
@@ -315,7 +330,7 @@ class _DashboardPageState extends State<DashboardPage> {
               width: 100,
               height: 100,
               child: CircularProgressIndicator(
-                value:steps,
+                value: steps,
                 strokeWidth: 6,
                 backgroundColor: Color(0xff66a1),
                 valueColor: AlwaysStoppedAnimation(Colors.pink),
