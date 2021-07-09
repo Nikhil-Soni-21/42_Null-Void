@@ -67,10 +67,6 @@ packages:
     description: flutter
     source: sdk
     version: "0.0.0"
-<<<<<<< HEAD
-  http:
-    dependency: "direct main"
-=======
   graphs:
     dependency: transitive
     description:
@@ -80,7 +76,6 @@ packages:
     version: "2.0.0"
   http:
     dependency: transitive
->>>>>>> 19b13753f05efbde0a12c78a422d4c6624f48515
     description:
       name: http
       url: "https://pub.dartlang.org"
@@ -121,8 +116,6 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "1.11.1"
-<<<<<<< HEAD
-=======
   rive:
     dependency: "direct main"
     description:
@@ -130,7 +123,6 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "0.7.22"
->>>>>>> 19b13753f05efbde0a12c78a422d4c6624f48515
   sky_engine:
     dependency: transitive
     description: flutter
