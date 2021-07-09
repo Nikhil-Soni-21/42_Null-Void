@@ -1,6 +1,7 @@
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:pedometer/pedometer.dart';
 import 'package:liquid_progress_indicator/liquid_progress_indicator.dart';
 import 'package:rive/rive.dart';
 import 'package:shimmer/shimmer.dart';
@@ -16,10 +17,21 @@ class DashboardPage extends StatefulWidget {
 
 class _DashboardPageState extends State<DashboardPage> {
   late Future<Quote> quote;
-
+  late final Stream<StepCount> _stepCountStream;
+  int steps = 0;
   @override
   void initState() {
     quote = getQuote();
+    _stepCountStream = Pedometer.stepCountStream;
+
+    _stepCountStream.listen((StepCount event) {
+      print("step = ${event.steps}");
+      setState(() {
+        steps = event.steps;
+      });
+    }).onError((error) {
+      print(error);
+    });
     super.initState();
   }
 
@@ -39,7 +51,10 @@ class _DashboardPageState extends State<DashboardPage> {
                 Row(
                   children: [
                     _avatar(),
-                    Flexible(child: _moodMeter(),flex: 0,)
+                    Flexible(
+                      child: _moodMeter(),
+                      flex: 0,
+                    )
                   ],
                 ),
                 SizedBox(height: 32),
@@ -204,10 +219,15 @@ class _DashboardPageState extends State<DashboardPage> {
           padding: EdgeInsets.symmetric(horizontal: 8),
           avatar: Image.asset("assets/icon_footsteps.png"),
           backgroundColor: Colors.black,
-          label: Text(
-            "$steps steps",
-            style: TextStyle(color: Colors.white),
-          ),
+          label: steps == 0
+              ? Text(
+                  "Pedometer not available",
+                  style: TextStyle(color: Colors.white),
+                )
+              : Text(
+                  "$steps steps",
+                  style: TextStyle(color: Colors.white),
+                ),
         ),
       ],
     );
@@ -321,7 +341,7 @@ class _DashboardPageState extends State<DashboardPage> {
                   ),
                 )),
             ElevatedButton(
-                onPressed: () {},
+              onPressed: () {},
               style: buttonStyle,
               child: Padding(
                 padding:
@@ -378,7 +398,7 @@ class _DashboardPageState extends State<DashboardPage> {
     );
   }
 
-  Widget _moodMeter(){
+  Widget _moodMeter() {
     var moodValue = 0.35;
     return Row(
       mainAxisSize: MainAxisSize.min,
@@ -411,5 +431,4 @@ class _DashboardPageState extends State<DashboardPage> {
       ],
     );
   }
-
 }
