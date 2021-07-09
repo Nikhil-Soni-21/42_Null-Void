@@ -63,7 +63,9 @@ class _DashboardPageState extends State<DashboardPage> {
                   height: 32,
                 ),
                 CarouselSlider(
-                  items: [_motivationCard(), _carouselExercise()],
+                  items: [_motivationCard(), _carouselExerciseProgress(),
+                    _carouselWorkProgress(), _carouselSideProjectsProgress(),
+                    _carouselYogaProgress()],
                   options: CarouselOptions(
                       height: 180,
                       viewportFraction: 1,
@@ -350,7 +352,7 @@ class _DashboardPageState extends State<DashboardPage> {
                   mainAxisSize: MainAxisSize.min,
                   children: [
                     Image.asset(
-                      "assets/icon_read.png",
+                      "assets/icon_yoga.png",
                       width: 38,
                       height: 38,
                     ),
@@ -358,7 +360,7 @@ class _DashboardPageState extends State<DashboardPage> {
                       width: 12,
                     ),
                     Text(
-                      "Read",
+                      "Yoga",
                       style: TextStyle(fontSize: 20),
                     ),
                   ],
@@ -371,7 +373,7 @@ class _DashboardPageState extends State<DashboardPage> {
     );
   }
 
-  Widget _carouselExercise() {
+  Widget _carouselWorkProgress() {
     var steps = 0.3;
     return Card(
       color: Colors.black,
@@ -392,6 +394,115 @@ class _DashboardPageState extends State<DashboardPage> {
                 valueColor: AlwaysStoppedAnimation(Colors.pink),
               ),
             ),
+            Padding(
+              padding: const EdgeInsets.only(left: 40.0, top: 24),
+              child: Text(
+                "Work Progress",
+                style: TextStyle(fontSize: 24.0, color: Colors.white),
+              ),
+            )
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _carouselExerciseProgress() {
+    var steps = 0.3;
+    return Card(
+      color: Colors.black,
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+      child: Padding(
+        padding: EdgeInsets.all(16),
+        child: Row(
+          mainAxisSize: MainAxisSize.max,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            SizedBox(
+              width: 100,
+              height: 100,
+              child: CircularProgressIndicator(
+                value: steps,
+                strokeWidth: 6,
+                backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+                valueColor: AlwaysStoppedAnimation(Colors.orange),
+              ),
+            ),
+            Padding(
+              padding: const EdgeInsets.only(left: 40.0, top: 24),
+              child: Text(
+                "Exercise Progress",
+                style: TextStyle(fontSize: 24.0, color: Colors.white),
+              ),
+            )
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _carouselSideProjectsProgress() {
+    var steps = 0.3;
+    return Card(
+      color: Colors.black,
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+      child: Padding(
+        padding: EdgeInsets.all(16),
+        child: Row(
+          mainAxisSize: MainAxisSize.max,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            SizedBox(
+              width: 100,
+              height: 100,
+              child: CircularProgressIndicator(
+                value: steps,
+                strokeWidth: 6,
+                backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+                valueColor: AlwaysStoppedAnimation(Colors.blue.shade200),
+              ),
+            ),
+            Padding(
+              padding: const EdgeInsets.only(left: 45.0, top: 20),
+              child: Text(
+                "Side Project\n  Progress",
+                style: TextStyle(fontSize: 24.0, color: Colors.white),
+              ),
+            )
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _carouselYogaProgress() {
+    var steps = 0.3;
+    return Card(
+      color: Colors.black,
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+      child: Padding(
+        padding: EdgeInsets.all(16),
+        child: Row(
+          mainAxisSize: MainAxisSize.max,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            SizedBox(
+              width: 100,
+              height: 100,
+              child: CircularProgressIndicator(
+                value: steps,
+                strokeWidth: 6,
+                backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+                valueColor: AlwaysStoppedAnimation(Colors.greenAccent),
+              ),
+            ),
+            Padding(
+              padding: const EdgeInsets.only(left: 40.0, top: 24),
+              child: Text(
+                "Yoga Progress",
+                style: TextStyle(fontSize: 24.0, color: Colors.white),
+              ),
+            )
           ],
         ),
       ),
