@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:tracker_app/repos/quotes_api.dart';
+import 'package:tracker_app/views/read.dart';
 import 'package:tracker_app/widgets/coloredRoundedCard.dart';
 
 class DashboardPage extends StatefulWidget {
@@ -176,7 +177,11 @@ class _DashboardPageState extends State<DashboardPage> {
                   child: Text("Side Project"),
                 )),
             ElevatedButton(
-                onPressed: () {},
+                onPressed: () {Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) =>
+                            reading()));},
                 style: ElevatedButton.styleFrom(primary: Colors.green.shade700),
                 child: Padding(
                   padding: const EdgeInsets.all(16.0),
