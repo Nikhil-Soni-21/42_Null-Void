@@ -22,6 +22,7 @@ class _StopwatchPageState extends State<StopwatchPage>
   late Stopwatch _stopwatch;
   late Timer _timer;
   late AnimationController _playController;
+  late RiveAnimationController _riveAnimationController;
 
   @override
   void initState() {
@@ -29,6 +30,7 @@ class _StopwatchPageState extends State<StopwatchPage>
     _stopwatch = Stopwatch();
     _playController =
         AnimationController(vsync: this, duration: Duration(milliseconds: 300));
+    _riveAnimationController = SimpleAnimation("Animation 1", autoplay: false);
     _timer = new Timer.periodic(new Duration(milliseconds: 30), (timer) {
       setState(() {});
     });
@@ -46,9 +48,11 @@ class _StopwatchPageState extends State<StopwatchPage>
     if (_stopwatch.isRunning) {
       _stopwatch.stop();
       _playController.reverse();
+      _riveAnimationController.isActive = false;
     } else {
       _stopwatch.start();
       _playController.forward();
+      _riveAnimationController.isActive = true;
     }
     setState(() {}); // re-render the page
   }
@@ -100,7 +104,13 @@ class _StopwatchPageState extends State<StopwatchPage>
                 SizedBox(
                   height: 180,
                   width: 180,
-                  child: RiveAnimation.asset("assets/clock.riv"),
+                  child: RiveAnimation.asset(
+                    "assets/clock.riv",
+                    controllers: [_riveAnimationController],
+                    onInit: (_) {
+                      setState(() {});
+                    },
+                  ),
                 ),
                 SizedBox(
                   height: 10,
@@ -205,6 +215,7 @@ class _StopwatchPageState extends State<StopwatchPage>
   void dispose() {
     _timer.cancel();
     _playController.dispose();
+    _riveAnimationController.dispose();
     super.dispose();
   }
 }
