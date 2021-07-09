@@ -6,6 +6,6 @@ class RiveTest extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return RiveAnimation.asset("assets/icon_check.riv");
+    return RiveAnimation.asset("assets/mood_normal.riv");
   }
 }

@@ -11,7 +11,7 @@ Future<Quote> getQuote() async {
   );
 
   if (response.statusCode == 200) {
-    print("Quote api call successfull");
+    print("Quote api call successful");
     return Quote.fromJson(response.body);
   } else {
     print("Quote api call FAILED");
