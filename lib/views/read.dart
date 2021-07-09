@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 class reading extends StatefulWidget {
@@ -12,6 +13,7 @@ class _readingState extends State<reading> {
   Widget build(BuildContext context) {
     return Container(
       child: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           Text(
