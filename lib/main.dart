@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:tracker_app/views/RiveTest.dart';
 import 'package:tracker_app/views/dashboard.dart';
 
 void main() {
