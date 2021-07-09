@@ -394,6 +394,20 @@ class _DashboardPageState extends State<DashboardPage> {
             direction: Axis.vertical,
           ),
         ),
+        Padding(
+          padding: const EdgeInsets.all(4.0),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Image.asset("assets/happy_smiley.png"),
+              Padding(
+                padding: const EdgeInsets.only(top: 30.0, bottom: 30.0),
+                child: Image.asset("assets/normal_smiley.png"),
+              ),
+              Image.asset("assets/sad_smiley.png"),
+            ],
+          ),
+        ),
       ],
     );
   }
