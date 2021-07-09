@@ -285,7 +285,7 @@ class _DashboardPageState extends State<DashboardPage> {
                           builder: (context) => StopwatchPage(
                                 activityType: "Side Project",
                                 colorTheme: Colors.yellow,
-                              )));
+                              ),),);
                 },
                 style: buttonStyle,
                 child: Padding(
