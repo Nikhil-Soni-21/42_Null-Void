@@ -1,5 +1,6 @@
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
+import 'package:pedometer/pedometer.dart';
 import 'package:rive/rive.dart';
 import 'package:shimmer/shimmer.dart';
 import 'package:tracker_app/repos/quotes_api.dart';
@@ -14,10 +15,21 @@ class DashboardPage extends StatefulWidget {
 
 class _DashboardPageState extends State<DashboardPage> {
   late Future<Quote> quote;
-
+  late final Stream<StepCount> _stepCountStream;
+  int steps = 0;
   @override
   void initState() {
     quote = getQuote();
+    _stepCountStream = Pedometer.stepCountStream;
+
+    _stepCountStream.listen((StepCount event) {
+      print("step = ${event.steps}");
+      setState(() {
+        steps = event.steps;
+      });
+    }).onError((error) {
+      print(error);
+    });
     super.initState();
   }
 
@@ -173,10 +185,15 @@ class _DashboardPageState extends State<DashboardPage> {
           padding: EdgeInsets.symmetric(horizontal: 8),
           avatar: Image.asset("assets/icon_footsteps.png"),
           backgroundColor: Colors.black,
-          label: Text(
-            "$steps steps",
-            style: TextStyle(color: Colors.white),
-          ),
+          label: steps == 0
+              ? Text(
+                  "Pedometer not available",
+                  style: TextStyle(color: Colors.white),
+                )
+              : Text(
+                  "$steps steps",
+                  style: TextStyle(color: Colors.white),
+                ),
         ),
       ],
     );
