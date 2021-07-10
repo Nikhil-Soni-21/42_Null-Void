@@ -7,7 +7,11 @@ Future<Map<String, int>> getCarouselData() async {
   Set<String> keys = prefs.getKeys();
 
   for (String key in keys) {
-    data[key] = prefs.getInt(key) ?? 0;
+    try {
+      data[key] = prefs.getInt(key) ?? 0;
+    } catch (error) {
+      continue;
+    }
     print(" $key - ${data[key]}");
   }
   return data;
@@ -19,6 +23,32 @@ Future<void> setDummyData() async {
   prefs.setInt("Side Project_goal", 180000);
 }
 
-double calculateScore(Map<String, int> data) {
-  return 0.6;
+Future<double> calculateScore(Map<String, int> data) async {
+  SharedPreferences prefs = await SharedPreferences.getInstance();
+  double? yesterday = prefs.getDouble("yesterdayScore");
+  double? dayBefore = prefs.getDouble("dayBefore_score");
+  double? dayBefore2 = prefs.getDouble("dayBefore2_score");
+
+  double res = 0;
+  double avg = 0;
+  int n = 0;
+  Set<String> keys = prefs.getKeys();
+  for (String key in keys) {
+    if (key.endsWith('_goal')) {
+      int? temp = prefs.getInt('${(key.split('_'))[0]}_timeToday') ?? 0;
+      double val = temp / prefs.getInt(key)!;
+
+      avg += val;
+
+      n++;
+    }
+  }
+
+  res = avg / n;
+
+  res =
+      (res + (yesterday ?? 0.5) + (dayBefore ?? 0.5) + (dayBefore2 ?? 0.5)) / 4;
+  print("res $res");
+  prefs.setDouble("total_score", res);
+  return res;
 }
