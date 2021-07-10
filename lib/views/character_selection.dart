@@ -79,9 +79,22 @@ class _characterSelectionState extends State<characterSelection> {
                         "", CharacterNameController, _validateCharacterName),
                   ),
                 ],
+              ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  ElevatedButton(onPressed: (){},
+                      child:
+                      Text(
+                          "Save"
+                      ),
+                    style: ButtonStyle(
+                        backgroundColor: MaterialStateProperty.all<Color>(
+                            Colors.orange)),
+                  ),
+                ],
               )
-            ],
-          ),
+          ]),
         ),
       ),
     );

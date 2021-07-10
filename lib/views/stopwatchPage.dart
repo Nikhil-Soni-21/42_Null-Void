@@ -173,8 +173,13 @@ class _StopwatchPageState extends State<StopwatchPage>
                     child: Row(
                       mainAxisSize: MainAxisSize.min,
                       children: [
-                        Icon(Icons.check_circle,color: Colors.black,),
-                        SizedBox(width: 12,),
+                        Icon(
+                          Icons.check_circle,
+                          color: Colors.black,
+                        ),
+                        SizedBox(
+                          width: 12,
+                        ),
                         Text(
                           "Complete Activity",
                           style: TextStyle(color: Colors.black, fontSize: 16),
@@ -200,6 +205,8 @@ class _StopwatchPageState extends State<StopwatchPage>
             "Good Job! Activity Saved : Time Worked : ${formatTime(_stopwatch.elapsedMilliseconds)} "),
       ),
     );
+
+    _riveAnimationController.isActive = false;
 
     //saving to storage
     SharedPreferences prefs = await SharedPreferences.getInstance();
