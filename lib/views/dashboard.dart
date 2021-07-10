@@ -7,9 +7,9 @@ import 'package:rive/rive.dart';
 import 'package:shimmer/shimmer.dart';
 import 'package:tracker_app/repos/quotes_api.dart';
 import 'package:tracker_app/repos/storage_api.dart';
-import 'package:tracker_app/views/exercise.dart';
 import 'package:tracker_app/views/stopwatchPage.dart';
-import 'package:tracker_app/views/yoga.dart';
+import 'package:tracker_app/views/yoga_exercise.dart';
+
 
 class DashboardPage extends StatefulWidget {
   const DashboardPage({Key? key}) : super(key: key);
@@ -40,7 +40,7 @@ class _DashboardPageState extends State<DashboardPage> {
 
     getCarouselData().then((value) {
       carouselData = value;
-      totalScore = calculateScore(value);
+      // totalScore = calculateScore(value);
       setState(() {});
     });
     super.initState();
@@ -176,7 +176,7 @@ class _DashboardPageState extends State<DashboardPage> {
   Widget _avatar() {
     return Flexible(
       child: SizedBox(
-          height: 300, child: RiveAnimation.asset("assets/mood_sad.riv")),
+          height: 300, child: RiveAnimation.asset("assets/male_mood_normal.riv")),
     );
   }
 
@@ -260,7 +260,7 @@ class _DashboardPageState extends State<DashboardPage> {
                       context,
                       MaterialPageRoute(
                           builder: (context) =>
-                              exercise()));
+                              YogaExercise(type: "Exercise")));
                 },
                 style: buttonStyle,
                 child: Padding(
@@ -322,7 +322,7 @@ class _DashboardPageState extends State<DashboardPage> {
                     context,
                     MaterialPageRoute(
                         builder: (context) =>
-                            yoga()));
+                            YogaExercise(type: "Yoga")));
               },
               style: buttonStyle,
               child: Padding(
