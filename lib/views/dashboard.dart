@@ -230,7 +230,8 @@ class _DashboardPageState extends State<DashboardPage>
         ));
     return Column(
       children: [
-        Text("What do you want to do next?",
+        Text(
+            "${avatarInfo["avatarName"] ?? "Your friend"} wants to know what do you want to do next?",
             style: TextStyle(
               fontSize: 20,
               color: Colors.white,
