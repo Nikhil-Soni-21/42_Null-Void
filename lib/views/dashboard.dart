@@ -179,7 +179,7 @@ class _DashboardPageState extends State<DashboardPage> {
   Widget _avatar() {
     return Flexible(
       child: SizedBox(
-          height: 300, child: RiveAnimation.asset("assets/mood_sad.riv")),
+          height: 300, child: RiveAnimation.asset("assets/male_mood_sad.riv")),
     );
   }
 
