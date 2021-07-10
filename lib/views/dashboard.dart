@@ -86,7 +86,8 @@ class _DashboardPageState extends State<DashboardPage>
                     _carouselExerciseProgress(),
                     _carouselWorkProgress(),
                     _carouselSideProjectsProgress(),
-                    _carouselYogaProgress()
+                    _carouselYogaProgress(),
+                    _carousalStepsTarget(),
                   ],
                   options: CarouselOptions(
                       height: 180,
@@ -545,6 +546,40 @@ class _DashboardPageState extends State<DashboardPage>
               padding: const EdgeInsets.only(left: 40.0, top: 24),
               child: Text(
                 "Yoga Progress",
+                style: TextStyle(fontSize: 24.0, color: Colors.white),
+              ),
+            )
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _carousalStepsTarget() {
+    var steps = 0.3;
+    return Card(
+      color: Colors.black,
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+      child: Padding(
+        padding: EdgeInsets.all(16),
+        child: Row(
+          mainAxisSize: MainAxisSize.max,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            SizedBox(
+              width: 100,
+              height: 100,
+              child: CircularProgressIndicator(
+                value: steps,
+                strokeWidth: 6,
+                backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+                valueColor: AlwaysStoppedAnimation(Colors.amber),
+              ),
+            ),
+            Padding(
+              padding: const EdgeInsets.only(left: 40.0, top: 24),
+              child: Text(
+                "Steps Target:",
                 style: TextStyle(fontSize: 24.0, color: Colors.white),
               ),
             )
