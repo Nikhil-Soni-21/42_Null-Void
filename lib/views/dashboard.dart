@@ -1,6 +1,7 @@
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:pedometer/pedometer.dart';
 import 'package:liquid_progress_indicator/liquid_progress_indicator.dart';
 import 'package:rive/rive.dart';
@@ -8,8 +9,8 @@ import 'package:shimmer/shimmer.dart';
 import 'package:tracker_app/repos/quotes_api.dart';
 import 'package:tracker_app/repos/storage_api.dart';
 import 'package:tracker_app/views/stopwatchPage.dart';
+import 'package:tracker_app/views/yogaRoutine.dart';
 import 'package:tracker_app/views/yoga_exercise.dart';
-
 
 class DashboardPage extends StatefulWidget {
   const DashboardPage({Key? key}) : super(key: key);
@@ -18,7 +19,8 @@ class DashboardPage extends StatefulWidget {
   _DashboardPageState createState() => _DashboardPageState();
 }
 
-class _DashboardPageState extends State<DashboardPage> {
+class _DashboardPageState extends State<DashboardPage>
+    with WidgetsBindingObserver {
   late Future<Quote> quote;
   late final Stream<StepCount> _stepCountStream;
   Map<String, int> carouselData = Map();
@@ -38,9 +40,9 @@ class _DashboardPageState extends State<DashboardPage> {
       print(error);
     });
 
-    getCarouselData().then((value) {
+    getCarouselData().then((value) async {
       carouselData = value;
-      // totalScore = calculateScore(value);
+      totalScore = await calculateScore(value);
       setState(() {});
     });
     super.initState();
@@ -176,7 +178,7 @@ class _DashboardPageState extends State<DashboardPage> {
   Widget _avatar() {
     return Flexible(
       child: SizedBox(
-          height: 300, child: RiveAnimation.asset("assets/male_mood_normal.riv")),
+          height: 300, child: RiveAnimation.asset("assets/mood_sad.riv")),
     );
   }
 
@@ -230,7 +232,15 @@ class _DashboardPageState extends State<DashboardPage> {
                           builder: (context) => StopwatchPage(
                                 activityType: "Work",
                                 colorTheme: Colors.yellow,
-                              )));
+                              ))).then((value) {
+                    setState(() {
+                      getCarouselData().then((value) async {
+                        carouselData = value;
+                        totalScore = await calculateScore(value);
+                        setState(() {});
+                      });
+                    });
+                  });
                 },
                 style: buttonStyle,
                 child: Padding(
@@ -259,8 +269,7 @@ class _DashboardPageState extends State<DashboardPage> {
                   Navigator.push(
                       context,
                       MaterialPageRoute(
-                          builder: (context) =>
-                              YogaExercise(type: "Exercise")));
+                          builder: (context) => YogaExerciseRoutinePage()));
                 },
                 style: buttonStyle,
                 child: Padding(
@@ -287,12 +296,22 @@ class _DashboardPageState extends State<DashboardPage> {
             ElevatedButton(
                 onPressed: () {
                   Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) => StopwatchPage(
-                                activityType: "Side Project",
-                                colorTheme: Colors.yellow,
-                              ),),);
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => StopwatchPage(
+                        activityType: "Side Project",
+                        colorTheme: Colors.yellow,
+                      ),
+                    ),
+                  ).then((value) {
+                    setState(() {
+                      getCarouselData().then((value) async {
+                        carouselData = value;
+                        totalScore = await calculateScore(value);
+                        setState(() {});
+                      });
+                    });
+                  });
                 },
                 style: buttonStyle,
                 child: Padding(
@@ -321,8 +340,9 @@ class _DashboardPageState extends State<DashboardPage> {
                 Navigator.push(
                     context,
                     MaterialPageRoute(
-                        builder: (context) =>
-                            YogaExercise(type: "Yoga")));
+                        builder: (context) => YogaExercise(
+                              type: "Yoga",
+                            )));
               },
               style: buttonStyle,
               child: Padding(
@@ -538,12 +558,24 @@ class _DashboardPageState extends State<DashboardPage> {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Image.asset("assets/happy_smiley.png", height: 24,width: 24,),
+              Image.asset(
+                "assets/happy_smiley.png",
+                height: 24,
+                width: 24,
+              ),
               Padding(
                 padding: const EdgeInsets.only(top: 64.0, bottom: 64.0),
-                child: Image.asset("assets/normal_smiley.png",height: 24,width: 24,),
+                child: Image.asset(
+                  "assets/normal_smiley.png",
+                  height: 24,
+                  width: 24,
+                ),
               ),
-              Image.asset("assets/sad_smiley.png",height: 24,width: 24,),
+              Image.asset(
+                "assets/sad_smiley.png",
+                height: 24,
+                width: 24,
+              ),
             ],
           ),
         ),
