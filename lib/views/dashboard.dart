@@ -8,10 +8,9 @@ import 'package:rive/rive.dart';
 import 'package:shimmer/shimmer.dart';
 import 'package:tracker_app/repos/quotes_api.dart';
 import 'package:tracker_app/repos/storage_api.dart';
-import 'package:tracker_app/views/exercise.dart';
 import 'package:tracker_app/views/stopwatchPage.dart';
-import 'package:tracker_app/views/yoga.dart';
 import 'package:tracker_app/views/yogaRoutine.dart';
+import 'package:tracker_app/views/yoga_exercise.dart';
 
 class DashboardPage extends StatefulWidget {
   const DashboardPage({Key? key}) : super(key: key);
@@ -41,7 +40,7 @@ class _DashboardPageState extends State<DashboardPage>
       print(error);
     });
 
-    getCarouselData().then((value) {
+    getCarouselData().then((value) async {
       carouselData = value;
       totalScore = await calculateScore(value);
       setState(() {});
@@ -339,7 +338,11 @@ class _DashboardPageState extends State<DashboardPage>
             ElevatedButton(
               onPressed: () {
                 Navigator.push(
-                    context, MaterialPageRoute(builder: (context) => yoga()));
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => YogaExercise(
+                              type: "Yoga",
+                            )));
               },
               style: buttonStyle,
               child: Padding(
