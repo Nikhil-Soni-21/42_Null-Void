@@ -1,9 +1,8 @@
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
-import 'package:pedometer/pedometer.dart';
 import 'package:liquid_progress_indicator/liquid_progress_indicator.dart';
+import 'package:pedometer/pedometer.dart';
 import 'package:rive/rive.dart';
 import 'package:shimmer/shimmer.dart';
 import 'package:tracker_app/repos/quotes_api.dart';
@@ -178,7 +177,7 @@ class _DashboardPageState extends State<DashboardPage>
   Widget _avatar() {
     return Flexible(
       child: SizedBox(
-          height: 300, child: RiveAnimation.asset("assets/mood_sad.riv")),
+          height: 300, child: RiveAnimation.asset("assets/male_mood_sad.riv")),
     );
   }
 
@@ -213,11 +212,13 @@ class _DashboardPageState extends State<DashboardPage>
         ));
     return Column(
       children: [
-        Text("What do you want to do next?",
-            style: TextStyle(
-              fontSize: 20,
-              color: Colors.white,
-            )),
+        Text(
+          "What do you want to do next?",
+          style: TextStyle(
+            fontSize: 20,
+            color: Colors.white,
+          ),
+        ),
         SizedBox(height: 22),
         Wrap(
           direction: Axis.horizontal,
@@ -227,12 +228,14 @@ class _DashboardPageState extends State<DashboardPage>
             ElevatedButton(
                 onPressed: () {
                   Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) => StopwatchPage(
-                                activityType: "Work",
-                                colorTheme: Colors.yellow,
-                              ))).then((value) {
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => StopwatchPage(
+                        activityType: "Work",
+                        colorTheme: Colors.yellow,
+                      ),
+                    ),
+                  ).then((value) {
                     setState(() {
                       getCarouselData().then((value) async {
                         carouselData = value;
@@ -269,7 +272,7 @@ class _DashboardPageState extends State<DashboardPage>
                   Navigator.push(
                       context,
                       MaterialPageRoute(
-                          builder: (context) => YogaExerciseRoutinePage()));
+                          builder: (context) => YogaExercise(type: 'Exercise')));
                 },
                 style: buttonStyle,
                 child: Padding(
@@ -282,17 +285,18 @@ class _DashboardPageState extends State<DashboardPage>
                         "assets/icon_exercise.png",
                         width: 38,
                         height: 38,
-                      ),
-                      SizedBox(
-                        width: 12,
-                      ),
-                      Text(
-                        "Exercise",
-                        style: TextStyle(fontSize: 20),
-                      ),
-                    ],
-                  ),
-                )),
+                    ),
+                    SizedBox(
+                      width: 12,
+                    ),
+                    Text(
+                      "Exercise",
+                      style: TextStyle(fontSize: 20),
+                    ),
+                  ],
+                ),
+              ),
+            ),
             ElevatedButton(
                 onPressed: () {
                   Navigator.push(

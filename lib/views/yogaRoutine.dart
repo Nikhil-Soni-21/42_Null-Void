@@ -2,11 +2,13 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 
-List<String> breathingExercise1 = ["Breathe in", "Hold Breath", "Breathe Out"];
-List<int> breathingExercise1Time = [6000, 8000, 9000];
-
 class YogaExerciseRoutinePage extends StatefulWidget {
-  const YogaExerciseRoutinePage({Key? key}) : super(key: key);
+
+  final List<String> titles;
+  final List<int> intervals;
+  final String name;
+
+  const YogaExerciseRoutinePage({Key? key,required this.name, required this.titles,required this.intervals}) : super(key: key);
 
   @override
   _YogaExerciseRoutinePageState createState() =>
@@ -22,9 +24,9 @@ class _YogaExerciseRoutinePageState extends State<YogaExerciseRoutinePage>
   late Stopwatch _stopwatch;
   late Timer timerMain;
   bool redoButtonActive = false;
+
   String formatTime(int milliseconds) {
     var secs = milliseconds ~/ 1000;
-    var hours = (secs ~/ 3600).toString().padLeft(2, '0');
     var minutes = ((secs % 3600) ~/ 60).toString().padLeft(2, '0');
     var seconds = (secs % 60).toString().padLeft(2, '0');
     return "$minutes:$seconds";
@@ -44,7 +46,6 @@ class _YogaExerciseRoutinePageState extends State<YogaExerciseRoutinePage>
     mainText = text;
     timeLimit = timeDuration;
     _stopwatch.start();
-    print("Starting");
 
     await Future.delayed(Duration(milliseconds: timeDuration)).then((value) {
       _stopwatch.stop();
@@ -53,6 +54,7 @@ class _YogaExerciseRoutinePageState extends State<YogaExerciseRoutinePage>
   }
 
   Future<void> exerciseHandler(List<String> texts, List<int> durations) async {
+    redoButtonActive = false;
     for (int i = 0; i < texts.length; i++) {
       await segmentController(texts[i], durations[i]);
     }
@@ -66,71 +68,56 @@ class _YogaExerciseRoutinePageState extends State<YogaExerciseRoutinePage>
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        body: Center(
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Image.asset(
-            "assets/icon_yoga.png",
-            width: 50,
-            height: 50,
-          ),
-          SizedBox(height: 20),
-          Text(mainText ?? "",
-              style: Theme.of(context).textTheme.headline1?.copyWith(
-                  fontSize: 40,
-                  color: Colors.white,
-                  fontWeight: FontWeight.bold)),
-          SizedBox(height: 10),
-          Text("Relax and follow the instructions",
-              style: Theme.of(context)
-                  .textTheme
-                  .headline1
-                  ?.copyWith(fontSize: 20, color: Colors.white)),
-          SizedBox(height: 10),
-          Text(formatTime(timeLimit - _stopwatch.elapsedMilliseconds),
-              style: TextStyle(fontSize: 48.0, color: Colors.white)),
-          SizedBox(height: 10),
-          !firstTime
-              ? Container()
-              : ElevatedButton(
-                  style: ElevatedButton.styleFrom(
-                      primary: Colors.purple,
-                      shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(8))),
-                  onPressed: () {
-                    exerciseHandler(breathingExercise1, breathingExercise1Time);
-                    setState(() {
-                      firstTime = false;
-                    });
-                  },
-                  child: Padding(
-                    padding: const EdgeInsets.fromLTRB(8, 0, 8, 0),
-                    child: Text(
-                      "Start Activity",
-                      style: TextStyle(color: Colors.white, fontSize: 16),
-                    ),
-                  ),
-                ),
-          !redoButtonActive
-              ? Container()
-              : FloatingActionButton(
-                  backgroundColor: Colors.purple,
-                  onPressed: () {
-                    setState(() {
-                      _stopwatch.reset();
-                      exerciseHandler(
-                          breathingExercise1, breathingExercise1Time);
-                    });
-                  },
-                  child: Icon(
-                    Icons.replay_outlined,
-                    size: 32,
-                  ),
-                ),
-        ],
+      appBar: AppBar(
+        elevation: 0,
+        backgroundColor: Theme.of(context).scaffoldBackgroundColor,
       ),
-    ));
+      body: Center(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Text(mainText ?? widget.name,
+                style: Theme.of(context).textTheme.headline1?.copyWith(
+                    fontSize: 40,
+                    color: Colors.white,
+                    fontWeight: FontWeight.bold)),
+            SizedBox(height: 10),
+            Text("Relax and follow the instructions",
+                style: Theme.of(context)
+                    .textTheme
+                    .headline1
+                    ?.copyWith(fontSize: 20, color: Colors.white)),
+            SizedBox(height: 10),
+            Text(formatTime(timeLimit - _stopwatch.elapsedMilliseconds),
+                style: TextStyle(fontSize: 48.0, color: Colors.white)),
+            SizedBox(height: 10),
+            Visibility(
+              visible: _stopwatch.isRunning ? false : true,
+              child: FloatingActionButton.extended(
+                onPressed: () {
+                  _stopwatch.isRunning
+                      ? null
+                      : exerciseHandler(widget.titles, widget.intervals);
+                },
+                backgroundColor: _stopwatch.isRunning ? Colors.red : Colors.blue,
+                icon: Icon(_stopwatch.isRunning
+                    ? Icons.pause
+                    : redoButtonActive
+                        ? Icons.refresh
+                        : Icons.play_arrow_outlined),
+                label: Text(_stopwatch.isRunning
+                    ? 'Stop'
+                    : redoButtonActive
+                        ? 'Restart'
+                        : 'Start'),
+              ),
+            ),
+            SizedBox(height: 22,)
+          ],
+        ),
+      ),
+    );
   }
 
   @override

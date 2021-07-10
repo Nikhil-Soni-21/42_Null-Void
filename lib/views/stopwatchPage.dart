@@ -23,6 +23,7 @@ class _StopwatchPageState extends State<StopwatchPage>
   late Timer _timer;
   late AnimationController _playController;
   late RiveAnimationController _riveAnimationController;
+  late RiveAnimationController _checkController;
 
   @override
   void initState() {
@@ -31,6 +32,7 @@ class _StopwatchPageState extends State<StopwatchPage>
     _playController =
         AnimationController(vsync: this, duration: Duration(milliseconds: 300));
     _riveAnimationController = SimpleAnimation("Animation 1", autoplay: false);
+    _checkController = SimpleAnimation("show",autoplay: true);
     _timer = new Timer.periodic(new Duration(milliseconds: 30), (timer) {
       setState(() {});
     });
@@ -67,14 +69,15 @@ class _StopwatchPageState extends State<StopwatchPage>
           var response = await showDialog(
               context: context,
               builder: (context) => new AlertDialog(
-                    title: Text("Exit?"),
-                    content: Text("You will lose progress if you exit"),
+                backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+                    title: Text("Exit?",style: TextStyle(color: Colors.white),),
+                    content: Text("You will lose progress if you exit",style: TextStyle(color: Colors.white),),
                     actions: [
                       TextButton(
                         onPressed: () {
                           return Navigator.of(context).pop(false);
                         },
-                        child: Text("Cancel"),
+                        child: Text("Cancel",style: TextStyle(color: Colors.white),),
                       ),
                       TextButton(
                         onPressed: () {
@@ -89,7 +92,6 @@ class _StopwatchPageState extends State<StopwatchPage>
           else
             return false;
         }
-        return true;
       },
       child: Scaffold(
         appBar: AppBar(
@@ -224,6 +226,7 @@ class _StopwatchPageState extends State<StopwatchPage>
     _timer.cancel();
     _playController.dispose();
     _riveAnimationController.dispose();
+    _checkController.dispose();
     super.dispose();
   }
 }
