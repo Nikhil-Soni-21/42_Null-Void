@@ -286,7 +286,11 @@ class _DashboardPageState extends State<DashboardPage>
                   Navigator.push(
                       context,
                       MaterialPageRoute(
-                          builder: (context) => YogaExerciseRoutinePage()));
+                        builder: (context) => StopwatchPage(
+                          activityType: "Work",
+                          colorTheme: Colors.yellow,
+                        ),
+                      ));
                 },
                 style: buttonStyle,
                 child: Padding(
