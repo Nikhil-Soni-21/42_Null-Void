@@ -24,7 +24,8 @@ class _DashboardPageState extends State<DashboardPage>
   late Future<Quote> quote;
   late final Stream<StepCount> _stepCountStream;
   Map<String, int> carouselData = Map();
-  int steps = 0;
+  Map<String, String?> avatarInfo = Map();
+  int stepCount = 0;
   double? totalScore;
   @override
   void initState() {
@@ -34,12 +35,16 @@ class _DashboardPageState extends State<DashboardPage>
     _stepCountStream.listen((StepCount event) {
       print("step = ${event.steps}");
       setState(() {
-        steps = event.steps;
+        stepCount = event.steps;
       });
     }).onError((error) {
       print(error);
     });
 
+    getAvatarData().then((value) {
+      avatarInfo = value;
+      setState(() {});
+    });
     getCarouselData().then((value) async {
       carouselData = value;
       totalScore = await calculateScore(value);
@@ -81,7 +86,8 @@ class _DashboardPageState extends State<DashboardPage>
                     _carouselExerciseProgress(),
                     _carouselWorkProgress(),
                     _carouselSideProjectsProgress(),
-                    _carouselYogaProgress()
+                    _carouselYogaProgress(),
+                    _carousalStepsTarget(),
                   ],
                   options: CarouselOptions(
                       height: 180,
@@ -176,14 +182,25 @@ class _DashboardPageState extends State<DashboardPage>
   }
 
   Widget _avatar() {
+    String mood = "happy";
+    if (totalScore == null) return Container();
+    if (totalScore! < 33) {
+      mood = "sad";
+    }
+    if (totalScore! < 6) {
+      mood = "normal";
+    }
+
+    String gender = avatarInfo["avatarGender"] ?? "male";
+    print("gender${gender}_$mood.riv ");
     return Flexible(
       child: SizedBox(
-          height: 300, child: RiveAnimation.asset("assets/mood_sad.riv")),
+          height: 300,
+          child: RiveAnimation.asset("assets/${gender}_$mood.riv")),
     );
   }
 
   Widget _topBar() {
-    var steps = 0;
     return Row(
       mainAxisAlignment: MainAxisAlignment.end,
       children: [
@@ -191,13 +208,13 @@ class _DashboardPageState extends State<DashboardPage>
           padding: EdgeInsets.symmetric(horizontal: 8),
           avatar: Image.asset("assets/icon_footsteps.png"),
           backgroundColor: Colors.black,
-          label: steps == 0
+          label: stepCount == 0
               ? Text(
                   "Pedometer not available",
                   style: TextStyle(color: Colors.white),
                 )
               : Text(
-                  "$steps steps",
+                  "$stepCount steps",
                   style: TextStyle(color: Colors.white),
                 ),
         ),
@@ -269,7 +286,11 @@ class _DashboardPageState extends State<DashboardPage>
                   Navigator.push(
                       context,
                       MaterialPageRoute(
-                          builder: (context) => YogaExercise(type: 'Exercise')));
+                        builder: (context) => StopwatchPage(
+                          activityType: "Work",
+                          colorTheme: Colors.yellow,
+                        ),
+                      ));
                 },
                 style: buttonStyle,
                 child: Padding(
@@ -531,6 +552,54 @@ class _DashboardPageState extends State<DashboardPage>
                 style: TextStyle(fontSize: 24.0, color: Colors.white),
               ),
             )
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _carousalStepsTarget() {
+    double? steps = 0;
+    if (carouselData["Step_goal"] != null)
+      steps = stepCount / carouselData["Step_goal"]!;
+    return Card(
+      color: Colors.black,
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+      child: Padding(
+        padding: EdgeInsets.all(16),
+        child: Column(
+          children: [
+            Row(
+              mainAxisSize: MainAxisSize.max,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                SizedBox(
+                  width: 100,
+                  height: 100,
+                  child: CircularProgressIndicator(
+                    value: steps,
+                    strokeWidth: 6,
+                    backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+                    valueColor: AlwaysStoppedAnimation(Colors.amber),
+                  ),
+                ),
+                Padding(
+                  padding: const EdgeInsets.only(left: 40.0, top: 24),
+                  child: Column(
+                    children: [
+                      Text(
+                        "Steps Target:",
+                        style: TextStyle(fontSize: 24.0, color: Colors.white),
+                      ),
+                      Text(
+                        "${carouselData["Step_goal"] ?? "Pedometer not Available"}",
+                        style: TextStyle(fontSize: 18.0, color: Colors.white),
+                      ),
+                    ],
+                  ),
+                ),
+              ],
+            ),
           ],
         ),
       ),
