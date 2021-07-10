@@ -11,7 +11,7 @@ class inputUser extends StatefulWidget {
 class _inputUserState extends State<inputUser> {
   double _workSliderValue = 0;
   double sideProjectSliderValue = 0;
-  double stepTargetSliderValue = 0;
+  double stepTargetSliderValue = 1000;
 
   var _formKey = GlobalKey<FormState>();
   TextEditingController NameController = TextEditingController();
@@ -97,10 +97,11 @@ class _inputUserState extends State<inputUser> {
                     Expanded(
                       flex: 4,
                       child: Slider(
+                          label: sideProjectSliderValue.toString()+ " Hrs",
                           value: _workSliderValue,
                           min: 0,
-                          max: 100,
-                          divisions: 10,
+                          max: 8,
+                          divisions: 32,
                           onChanged: (double value) {
                             setState(() {
                               _workSliderValue = value;
@@ -127,10 +128,11 @@ class _inputUserState extends State<inputUser> {
                     Expanded(
                       flex: 4,
                       child: Slider(
+                        label: sideProjectSliderValue.toString()+ " Hrs",
                           value: sideProjectSliderValue,
                           min: 0,
-                          max: 100,
-                          divisions: 10,
+                          max: 8,
+                          divisions: 32,
                           onChanged: (double value) {
                             setState(() {
                               sideProjectSliderValue = value;
@@ -157,10 +159,11 @@ class _inputUserState extends State<inputUser> {
                     Expanded(
                       flex: 4,
                       child: Slider(
+                        label: double.parse(stepTargetSliderValue.toStringAsFixed(0)).toInt().toString(),
                           value: stepTargetSliderValue,
-                          min: 0,
-                          max: 100,
-                          divisions: 10,
+                          min: 1000,
+                          max: 24000,
+                          divisions: 23,
                           onChanged: (double value) {
                             setState(() {
                               stepTargetSliderValue = value;
