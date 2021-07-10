@@ -7,9 +7,9 @@ import 'package:rive/rive.dart';
 import 'package:shimmer/shimmer.dart';
 import 'package:tracker_app/repos/quotes_api.dart';
 import 'package:tracker_app/repos/storage_api.dart';
-import 'package:tracker_app/views/exercise.dart';
 import 'package:tracker_app/views/stopwatchPage.dart';
-import 'package:tracker_app/views/yoga.dart';
+import 'package:tracker_app/views/yoga_exercise.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class DashboardPage extends StatefulWidget {
   const DashboardPage({Key? key}) : super(key: key);
@@ -47,7 +47,7 @@ class _DashboardPageState extends State<DashboardPage> {
   }
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context){
     return Scaffold(
       body: SafeArea(
         child: SingleChildScrollView(
@@ -260,7 +260,7 @@ class _DashboardPageState extends State<DashboardPage> {
                       context,
                       MaterialPageRoute(
                           builder: (context) =>
-                              exercise()));
+                              YogaExercise(type: "Exercise")));
                 },
                 style: buttonStyle,
                 child: Padding(
@@ -322,7 +322,7 @@ class _DashboardPageState extends State<DashboardPage> {
                     context,
                     MaterialPageRoute(
                         builder: (context) =>
-                            yoga()));
+                            YogaExercise(type: "Yoga",)));
               },
               style: buttonStyle,
               child: Padding(
