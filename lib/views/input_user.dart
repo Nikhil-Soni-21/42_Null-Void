@@ -169,15 +169,13 @@ class _inputUserState extends State<inputUser> {
                     )
                   ],
                 ),
-                SizedBox(height: 34,),
+                SizedBox(
+                  height: 34,
+                ),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    ElevatedButton(onPressed: (){},
-                        child:
-                    Text(
-                      "Save"
-                    ))
+                    ElevatedButton(onPressed: () {}, child: Text("Save"))
                   ],
                 )
               ],
