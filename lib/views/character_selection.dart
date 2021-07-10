@@ -94,8 +94,8 @@ class _characterSelectionState extends State<characterSelection> {
                 ),
                 Padding(
                   padding: const EdgeInsets.only(right: 60.0, left: 60.0),
-                  child: formTextField(
-                      "", CharacterNameController, _validateCharacterName),
+                  child: formTextField(TextInputType.name, "",
+                      CharacterNameController, _validateCharacterName, null),
                 ),
               ],
             ),

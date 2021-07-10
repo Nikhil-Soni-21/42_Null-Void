@@ -660,4 +660,15 @@ class _DashboardPageState extends State<DashboardPage>
     var seconds = (secs % 60).toString().padLeft(2, '0');
     return "$hours:$minutes:$seconds";
   }
+
 }
+
+class ConvBubble extends StatelessWidget {
+  const ConvBubble({Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Container();
+  }
+}
+

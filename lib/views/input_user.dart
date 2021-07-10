@@ -3,8 +3,6 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:tracker_app/views/character_selection.dart';
 import 'package:tracker_app/views/formWidgets.dart';
 
-import 'dashboard.dart';
-
 class inputUser extends StatefulWidget {
   const inputUser({Key? key}) : super(key: key);
 
@@ -26,176 +24,182 @@ class _inputUserState extends State<inputUser> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        backgroundColor: Colors.orange,
-        title: Text("Enter Your details"),
-      ),
       body: SingleChildScrollView(
         child: SafeArea(
-            child: Form(
-          key: _formKey,
-          child: Padding(
-            padding: const EdgeInsets.all(35.0),
-            child: Column(
-              children: [
-                Row(mainAxisSize: MainAxisSize.min, children: <Widget>[
-                  Expanded(
-                      flex: 2,
-                      child: formTextField(
-                          "Name", NameController, _validateUsername)),
+          child: Form(
+            key: _formKey,
+            child: Padding(
+              padding: const EdgeInsets.all(35.0),
+              child: Column(
+                children: [
                   SizedBox(
-                    width: 20,
-                  ),
-                  Expanded(
-                      flex: 1,
-                      child: formTextField("Age", AgeController, _validateAge)),
-                ]),
-                SizedBox(
-                  height: 30,
-                ),
-                Row(mainAxisSize: MainAxisSize.min, children: <Widget>[
-                  Expanded(
-                      flex: 1,
-                      child: formTextField(
-                          "Height", HeightController, _validateHeight)),
-                  SizedBox(
-                    width: 6,
+                    height: 12,
                   ),
                   Text(
-                    "Cm",
-                    style: TextStyle(
-                      color: Colors.white,
-                      fontSize: 14,
-                    ),
+                    'Enter Basic Details',
+                    style: Theme.of(context).textTheme.headline5!.copyWith(color: Colors.white),
                   ),
                   SizedBox(
-                    width: 20,
+                    height: 32,
                   ),
-                  Expanded(
-                      flex: 1,
-                      child: formTextField(
-                          "Weight", WeightController, _validateWeight)),
+                  Row(mainAxisSize: MainAxisSize.min, children: <Widget>[
+                    Expanded(
+                        flex: 2,
+                        child: formTextField(TextInputType.name, "Name",
+                            NameController, _validateUsername, null)),
+                    SizedBox(
+                      width: 20,
+                    ),
+                    Expanded(
+                        flex: 1,
+                        child: formTextField(TextInputType.number, "Age",
+                            AgeController, _validateAge, 'Years')),
+                  ]),
+                  SizedBox(
+                    height: 30,
+                  ),
+                  Row(mainAxisSize: MainAxisSize.min, children: <Widget>[
+                    Expanded(
+                        flex: 1,
+                        child: formTextField(TextInputType.number, "Height",
+                            HeightController, _validateHeight, 'Cm')),
+                    SizedBox(
+                      width: 6,
+                    ),
+                    SizedBox(
+                      width: 20,
+                    ),
+                    Expanded(
+                        flex: 1,
+                        child: formTextField(TextInputType.number, "Weight",
+                            WeightController, _validateWeight, 'Kg')),
+                  ]),
+                  SizedBox(
+                    height: 22,
+                  ),
+                  Divider(height: 2,color: Colors.white,),
+                  SizedBox(
+                    height: 22,
+                  ),
                   Text(
-                    "Kg",
-                    style: TextStyle(
-                      color: Colors.white,
-                      fontSize: 14,
-                    ),
+                    'Set your daily goals',
+                    style: Theme.of(context).textTheme.headline5!.copyWith(color: Colors.white),
                   ),
-                ]),
-                SizedBox(
-                  height: 30,
-                ),
-                Row(
-                  children: [
-                    Expanded(
-                      flex: 2,
-                      child: Text(
-                        "Work Target: ",
-                        style: TextStyle(
-                          color: Colors.white,
-                          fontSize: 20,
+                  SizedBox(
+                    height: 30,
+                  ),
+                  Row(
+                    children: [
+                      Expanded(
+                        flex: 2,
+                        child: Text(
+                          "Work Target: ",
+                          style: TextStyle(
+                            color: Colors.white,
+                            fontSize: 20,
+                          ),
                         ),
                       ),
-                    ),
-                    Expanded(
-                      flex: 4,
-                      child: Slider(
-                          label: _workSliderValue.toString() + " Hrs",
-                          value: _workSliderValue,
-                          min: 0,
-                          max: 8,
-                          divisions: 32,
-                          onChanged: (double value) {
-                            setState(() {
-                              _workSliderValue = value;
-                            });
-                          }),
-                    )
-                  ],
-                ),
-                SizedBox(
-                  height: 30,
-                ),
-                Row(
-                  children: [
-                    Expanded(
-                      flex: 2,
-                      child: Text(
-                        "Side Project: ",
-                        style: TextStyle(
-                          color: Colors.white,
-                          fontSize: 20,
+                      Expanded(
+                        flex: 4,
+                        child: Slider(
+                            label: _workSliderValue.toString() + " Hrs",
+                            value: _workSliderValue,
+                            min: 0,
+                            max: 8,
+                            divisions: 32,
+                            onChanged: (double value) {
+                              setState(() {
+                                _workSliderValue = value;
+                              });
+                            }),
+                      ),
+                    ],
+                  ),
+                  SizedBox(
+                    height: 30,
+                  ),
+                  Row(
+                    children: [
+                      Expanded(
+                        flex: 2,
+                        child: Text(
+                          "Side Project: ",
+                          style: TextStyle(
+                            color: Colors.white,
+                            fontSize: 20,
+                          ),
                         ),
                       ),
-                    ),
-                    Expanded(
-                      flex: 4,
-                      child: Slider(
-                          label: sideProjectSliderValue.toString() + " Hrs",
-                          value: sideProjectSliderValue,
-                          min: 0,
-                          max: 8,
-                          divisions: 32,
-                          onChanged: (double value) {
-                            setState(() {
-                              sideProjectSliderValue = value;
-                            });
-                          }),
-                    )
-                  ],
-                ),
-                SizedBox(
-                  height: 30,
-                ),
-                Row(
-                  children: [
-                    Expanded(
-                      flex: 2,
-                      child: Text(
-                        "Step Target: ",
-                        style: TextStyle(
-                          color: Colors.white,
-                          fontSize: 20,
+                      Expanded(
+                        flex: 4,
+                        child: Slider(
+                            label: sideProjectSliderValue.toString() + " Hrs",
+                            value: sideProjectSliderValue,
+                            min: 0,
+                            max: 8,
+                            divisions: 32,
+                            onChanged: (double value) {
+                              setState(() {
+                                sideProjectSliderValue = value;
+                              });
+                            }),
+                      ),
+                    ],
+                  ),
+                  SizedBox(
+                    height: 30,
+                  ),
+                  Row(
+                    children: [
+                      Expanded(
+                        flex: 2,
+                        child: Text(
+                          "Step Target: ",
+                          style: TextStyle(
+                            color: Colors.white,
+                            fontSize: 20,
+                          ),
                         ),
                       ),
-                    ),
-                    Expanded(
-                      flex: 4,
-                      child: Slider(
-                          label: double.parse(
-                                  stepTargetSliderValue.toStringAsFixed(0))
-                              .toInt()
-                              .toString(),
-                          value: stepTargetSliderValue,
-                          min: 1000,
-                          max: 24000,
-                          divisions: 23,
-                          onChanged: (double value) {
-                            setState(() {
-                              stepTargetSliderValue = value;
-                            });
-                          }),
-                    )
-                  ],
-                ),
-                SizedBox(
-                  height: 34,
-                ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    ElevatedButton(
-                        onPressed: () {
-                          saveData();
-                        },
-                        child: Text("Save"))
-                  ],
-                )
-              ],
+                      Expanded(
+                        flex: 4,
+                        child: Slider(
+                            label: double.parse(
+                                    stepTargetSliderValue.toStringAsFixed(0))
+                                .toInt()
+                                .toString(),
+                            value: stepTargetSliderValue,
+                            min: 1000,
+                            max: 24000,
+                            divisions: 23,
+                            onChanged: (double value) {
+                              setState(() {
+                                stepTargetSliderValue = value;
+                              });
+                            }),
+                      ),
+                    ],
+                  ),
+                  SizedBox(
+                    height: 34,
+                  ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      ElevatedButton.icon(
+                          onPressed: () {
+                            saveData();
+                          },
+                          icon: Icon(Icons.save_outlined),
+                          label: Text("Save"))
+                    ],
+                  ),
+                ],
+              ),
             ),
           ),
-        )),
+        ),
       ),
     );
   }
