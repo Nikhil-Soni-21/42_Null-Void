@@ -175,7 +175,7 @@ class _DashboardPageState extends State<DashboardPage> {
   Widget _avatar() {
     return Flexible(
       child: SizedBox(
-          height: 300, child: RiveAnimation.asset("assets/mood_happy.riv")),
+          height: 300, child: RiveAnimation.asset("assets/mood_sad.riv")),
     );
   }
 
@@ -395,7 +395,7 @@ class _DashboardPageState extends State<DashboardPage> {
   }
 
   Widget _carouselExerciseProgress() {
-    var steps = 0.3;
+    var steps = 0.0;
     return Card(
       color: Colors.black,
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
@@ -416,7 +416,7 @@ class _DashboardPageState extends State<DashboardPage> {
               ),
             ),
             Padding(
-              padding: const EdgeInsets.only(left: 40.0, top: 24),
+              padding: const EdgeInsets.only(left: 22.0, top: 24),
               child: Text(
                 "Exercise Progress",
                 style: TextStyle(fontSize: 24.0, color: Colors.white),

@@ -129,6 +129,7 @@ class _StopwatchPageState extends State<StopwatchPage>
                   mainAxisSize: MainAxisSize.max,
                   children: [
                     FloatingActionButton(
+                      heroTag: "play",
                       onPressed: handleStartStop,
                       tooltip: _stopwatch.isRunning
                           ? 'Pause ${widget.activityType}'
