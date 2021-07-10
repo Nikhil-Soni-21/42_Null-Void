@@ -25,7 +25,7 @@ class _DashboardPageState extends State<DashboardPage>
   late final Stream<StepCount> _stepCountStream;
   Map<String, int> carouselData = Map();
   Map<String, String?> avatarInfo = Map();
-  int steps = 0;
+  int stepCount = 0;
   double? totalScore;
   @override
   void initState() {
@@ -35,7 +35,7 @@ class _DashboardPageState extends State<DashboardPage>
     _stepCountStream.listen((StepCount event) {
       print("step = ${event.steps}");
       setState(() {
-        steps = event.steps;
+        stepCount = event.steps;
       });
     }).onError((error) {
       print(error);
@@ -201,7 +201,6 @@ class _DashboardPageState extends State<DashboardPage>
   }
 
   Widget _topBar() {
-    var steps = 0;
     return Row(
       mainAxisAlignment: MainAxisAlignment.end,
       children: [
@@ -209,13 +208,13 @@ class _DashboardPageState extends State<DashboardPage>
           padding: EdgeInsets.symmetric(horizontal: 8),
           avatar: Image.asset("assets/icon_footsteps.png"),
           backgroundColor: Colors.black,
-          label: steps == 0
+          label: stepCount == 0
               ? Text(
                   "Pedometer not available",
                   style: TextStyle(color: Colors.white),
                 )
               : Text(
-                  "$steps steps",
+                  "$stepCount steps",
                   style: TextStyle(color: Colors.white),
                 ),
         ),
@@ -556,33 +555,47 @@ class _DashboardPageState extends State<DashboardPage>
   }
 
   Widget _carousalStepsTarget() {
-    var steps = 0.3;
+    double? steps = 0;
+    if (carouselData["Step_goal"] != null)
+      steps = stepCount / carouselData["Step_goal"]!;
     return Card(
       color: Colors.black,
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
       child: Padding(
         padding: EdgeInsets.all(16),
-        child: Row(
-          mainAxisSize: MainAxisSize.max,
-          crossAxisAlignment: CrossAxisAlignment.start,
+        child: Column(
           children: [
-            SizedBox(
-              width: 100,
-              height: 100,
-              child: CircularProgressIndicator(
-                value: steps,
-                strokeWidth: 6,
-                backgroundColor: Theme.of(context).scaffoldBackgroundColor,
-                valueColor: AlwaysStoppedAnimation(Colors.amber),
-              ),
+            Row(
+              mainAxisSize: MainAxisSize.max,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                SizedBox(
+                  width: 100,
+                  height: 100,
+                  child: CircularProgressIndicator(
+                    value: steps,
+                    strokeWidth: 6,
+                    backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+                    valueColor: AlwaysStoppedAnimation(Colors.amber),
+                  ),
+                ),
+                Padding(
+                  padding: const EdgeInsets.only(left: 40.0, top: 24),
+                  child: Column(
+                    children: [
+                      Text(
+                        "Steps Target:",
+                        style: TextStyle(fontSize: 24.0, color: Colors.white),
+                      ),
+                      Text(
+                        "${carouselData["Step_goal"] ?? "Pedometer not Available"}",
+                        style: TextStyle(fontSize: 18.0, color: Colors.white),
+                      ),
+                    ],
+                  ),
+                ),
+              ],
             ),
-            Padding(
-              padding: const EdgeInsets.only(left: 40.0, top: 24),
-              child: Text(
-                "Steps Target:",
-                style: TextStyle(fontSize: 24.0, color: Colors.white),
-              ),
-            )
           ],
         ),
       ),
