@@ -1,8 +1,9 @@
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:liquid_progress_indicator/liquid_progress_indicator.dart';
+import 'package:flutter/services.dart';
 import 'package:pedometer/pedometer.dart';
+import 'package:liquid_progress_indicator/liquid_progress_indicator.dart';
 import 'package:rive/rive.dart';
 import 'package:shimmer/shimmer.dart';
 import 'package:tracker_app/repos/quotes_api.dart';
@@ -23,6 +24,7 @@ class _DashboardPageState extends State<DashboardPage>
   late Future<Quote> quote;
   late final Stream<StepCount> _stepCountStream;
   Map<String, int> carouselData = Map();
+  Map<String, String?> avatarInfo = Map();
   int steps = 0;
   double? totalScore;
   @override
@@ -39,6 +41,10 @@ class _DashboardPageState extends State<DashboardPage>
       print(error);
     });
 
+    getAvatarData().then((value) {
+      avatarInfo = value;
+      setState(() {});
+    });
     getCarouselData().then((value) async {
       carouselData = value;
       totalScore = await calculateScore(value);
@@ -80,7 +86,8 @@ class _DashboardPageState extends State<DashboardPage>
                     _carouselExerciseProgress(),
                     _carouselWorkProgress(),
                     _carouselSideProjectsProgress(),
-                    _carouselYogaProgress()
+                    _carouselYogaProgress(),
+                    _carousalStepsTarget(),
                   ],
                   options: CarouselOptions(
                       height: 180,
@@ -175,9 +182,21 @@ class _DashboardPageState extends State<DashboardPage>
   }
 
   Widget _avatar() {
+    String mood = "happy";
+    if (totalScore == null) return Container();
+    if (totalScore! < 33) {
+      mood = "sad";
+    }
+    if (totalScore! < 6) {
+      mood = "normal";
+    }
+
+    String gender = avatarInfo["avatarGender"] ?? "male";
+    print("gender${gender}_$mood.riv ");
     return Flexible(
       child: SizedBox(
-          height: 300, child: RiveAnimation.asset("assets/male_mood_sad.riv")),
+          height: 300,
+          child: RiveAnimation.asset("assets/${gender}_$mood.riv")),
     );
   }
 
@@ -212,13 +231,11 @@ class _DashboardPageState extends State<DashboardPage>
         ));
     return Column(
       children: [
-        Text(
-          "What do you want to do next?",
-          style: TextStyle(
-            fontSize: 20,
-            color: Colors.white,
-          ),
-        ),
+        Text("What do you want to do next?",
+            style: TextStyle(
+              fontSize: 20,
+              color: Colors.white,
+            )),
         SizedBox(height: 22),
         Wrap(
           direction: Axis.horizontal,
@@ -228,14 +245,12 @@ class _DashboardPageState extends State<DashboardPage>
             ElevatedButton(
                 onPressed: () {
                   Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => StopwatchPage(
-                        activityType: "Work",
-                        colorTheme: Colors.yellow,
-                      ),
-                    ),
-                  ).then((value) {
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => StopwatchPage(
+                                activityType: "Work",
+                                colorTheme: Colors.yellow,
+                              ))).then((value) {
                     setState(() {
                       getCarouselData().then((value) async {
                         carouselData = value;
@@ -272,7 +287,7 @@ class _DashboardPageState extends State<DashboardPage>
                   Navigator.push(
                       context,
                       MaterialPageRoute(
-                          builder: (context) => YogaExercise(type: 'Exercise')));
+                          builder: (context) => YogaExerciseRoutinePage()));
                 },
                 style: buttonStyle,
                 child: Padding(
@@ -285,18 +300,17 @@ class _DashboardPageState extends State<DashboardPage>
                         "assets/icon_exercise.png",
                         width: 38,
                         height: 38,
-                    ),
-                    SizedBox(
-                      width: 12,
-                    ),
-                    Text(
-                      "Exercise",
-                      style: TextStyle(fontSize: 20),
-                    ),
-                  ],
-                ),
-              ),
-            ),
+                      ),
+                      SizedBox(
+                        width: 12,
+                      ),
+                      Text(
+                        "Exercise",
+                        style: TextStyle(fontSize: 20),
+                      ),
+                    ],
+                  ),
+                )),
             ElevatedButton(
                 onPressed: () {
                   Navigator.push(
@@ -532,6 +546,40 @@ class _DashboardPageState extends State<DashboardPage>
               padding: const EdgeInsets.only(left: 40.0, top: 24),
               child: Text(
                 "Yoga Progress",
+                style: TextStyle(fontSize: 24.0, color: Colors.white),
+              ),
+            )
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _carousalStepsTarget() {
+    var steps = 0.3;
+    return Card(
+      color: Colors.black,
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+      child: Padding(
+        padding: EdgeInsets.all(16),
+        child: Row(
+          mainAxisSize: MainAxisSize.max,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            SizedBox(
+              width: 100,
+              height: 100,
+              child: CircularProgressIndicator(
+                value: steps,
+                strokeWidth: 6,
+                backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+                valueColor: AlwaysStoppedAnimation(Colors.amber),
+              ),
+            ),
+            Padding(
+              padding: const EdgeInsets.only(left: 40.0, top: 24),
+              child: Text(
+                "Steps Target:",
                 style: TextStyle(fontSize: 24.0, color: Colors.white),
               ),
             )
