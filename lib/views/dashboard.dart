@@ -12,6 +12,7 @@ import 'package:tracker_app/repos/storage_api.dart';
 import 'package:tracker_app/views/exercise.dart';
 import 'package:tracker_app/views/stopwatchPage.dart';
 import 'package:tracker_app/views/yoga.dart';
+import 'package:tracker_app/views/yogaRoutine.dart';
 
 class DashboardPage extends StatefulWidget {
   const DashboardPage({Key? key}) : super(key: key);
@@ -269,8 +270,10 @@ class _DashboardPageState extends State<DashboardPage>
                 )),
             ElevatedButton(
                 onPressed: () {
-                  Navigator.push(context,
-                      MaterialPageRoute(builder: (context) => exercise()));
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => YogaExerciseRoutinePage()));
                 },
                 style: buttonStyle,
                 child: Padding(
