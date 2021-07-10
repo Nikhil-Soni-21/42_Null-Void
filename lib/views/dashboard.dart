@@ -86,7 +86,7 @@ class _DashboardPageState extends State<DashboardPage>
                     _carouselExerciseProgress(),
                     _carouselWorkProgress(),
                     _carouselSideProjectsProgress(),
-                    _carouselYogaProgress(),
+                    //_carouselYogaProgress(),
                     _carousalStepsTarget(),
                   ],
                   options: CarouselOptions(
@@ -443,33 +443,45 @@ class _DashboardPageState extends State<DashboardPage>
   }
 
   Widget _carouselExerciseProgress() {
-    var steps = 0.0;
+    double steps = 0;
+    if (carouselData["Exercise_timeToday"] != null &&
+        carouselData["Exercise_goal"] != null)
+      steps = (carouselData["Exercise_timeToday"]! /
+          carouselData["Exercise_goal"]!);
     return Card(
       color: Colors.black,
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
       child: Padding(
         padding: EdgeInsets.all(16),
-        child: Row(
-          mainAxisSize: MainAxisSize.max,
-          crossAxisAlignment: CrossAxisAlignment.start,
+        child: Column(
           children: [
-            SizedBox(
-              width: 100,
-              height: 100,
-              child: CircularProgressIndicator(
-                value: steps,
-                strokeWidth: 6,
-                backgroundColor: Theme.of(context).scaffoldBackgroundColor,
-                valueColor: AlwaysStoppedAnimation(Colors.orange),
-              ),
+            Row(
+              mainAxisSize: MainAxisSize.max,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                SizedBox(
+                  width: 100,
+                  height: 100,
+                  child: CircularProgressIndicator(
+                    value: steps,
+                    strokeWidth: 6,
+                    backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+                    valueColor: AlwaysStoppedAnimation(Colors.orange),
+                  ),
+                ),
+                Padding(
+                  padding: const EdgeInsets.only(left: 22.0, top: 24),
+                  child: Text(
+                    "Exercise Progress",
+                    style: TextStyle(fontSize: 24.0, color: Colors.white),
+                  ),
+                )
+              ],
             ),
-            Padding(
-              padding: const EdgeInsets.only(left: 22.0, top: 24),
-              child: Text(
-                "Exercise Progress",
-                style: TextStyle(fontSize: 24.0, color: Colors.white),
-              ),
-            )
+            Text("Exercises done: ${carouselData["Exercise_timeToday"]}",
+                style: TextStyle(fontSize: 16.0, color: Colors.white)),
+            Text("Goal for today: ${carouselData["Exercise_goal"] ?? "0"}",
+                style: TextStyle(fontSize: 16.0, color: Colors.white))
           ],
         ),
       ),

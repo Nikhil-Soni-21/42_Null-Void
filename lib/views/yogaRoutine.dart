@@ -1,14 +1,19 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class YogaExerciseRoutinePage extends StatefulWidget {
-
   final List<String> titles;
   final List<int> intervals;
   final String name;
 
-  const YogaExerciseRoutinePage({Key? key,required this.name, required this.titles,required this.intervals}) : super(key: key);
+  const YogaExerciseRoutinePage(
+      {Key? key,
+      required this.name,
+      required this.titles,
+      required this.intervals})
+      : super(key: key);
 
   @override
   _YogaExerciseRoutinePageState createState() =>
@@ -63,6 +68,13 @@ class _YogaExerciseRoutinePageState extends State<YogaExerciseRoutinePage>
     _stopwatch.reset();
     timeLimit = 0;
     redoButtonActive = true;
+
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    int? temp = prefs.getInt("Exercise_timeToday");
+    if (temp == null) {
+      prefs.setInt("Exercise_timeToday", 0);
+    } else
+      prefs.setInt("Exercise_timeToday", temp++);
   }
 
   @override
@@ -100,7 +112,8 @@ class _YogaExerciseRoutinePageState extends State<YogaExerciseRoutinePage>
                       ? null
                       : exerciseHandler(widget.titles, widget.intervals);
                 },
-                backgroundColor: _stopwatch.isRunning ? Colors.red : Colors.blue,
+                backgroundColor:
+                    _stopwatch.isRunning ? Colors.red : Colors.blue,
                 icon: Icon(_stopwatch.isRunning
                     ? Icons.pause
                     : redoButtonActive
@@ -113,7 +126,9 @@ class _YogaExerciseRoutinePageState extends State<YogaExerciseRoutinePage>
                         : 'Start'),
               ),
             ),
-            SizedBox(height: 22,)
+            SizedBox(
+              height: 22,
+            )
           ],
         ),
       ),
