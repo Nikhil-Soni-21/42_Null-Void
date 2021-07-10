@@ -1,7 +1,7 @@
 import 'package:shared_preferences/shared_preferences.dart';
 
 Future<Map<String, int>> getCarouselData() async {
-  await setDummyData();
+  //await setDummyData();
   Map<String, int> data = Map();
   SharedPreferences prefs = await SharedPreferences.getInstance();
   Set<String> keys = prefs.getKeys();
@@ -28,8 +28,13 @@ Future<Map<String, String?>> getAvatarData() async {
 
 Future<void> setDummyData() async {
   SharedPreferences prefs = await SharedPreferences.getInstance();
-  prefs.setInt("Work_goal", 180000);
-  prefs.setInt("Side Project_goal", 180000);
+  // print(prefs.getString("userName"));
+  // print(prefs.getString("userAge"));
+  // print(prefs.getString("userHeight"));
+  // print(prefs.getInt("Work_goal"));
+  // print(prefs.getString("userWeight"));
+  // print(prefs.getInt("Side Project_goal"));
+  // print(prefs.getDouble("Step_goal"));
 }
 
 Future<double> calculateScore(Map<String, int> data) async {
@@ -44,6 +49,7 @@ Future<double> calculateScore(Map<String, int> data) async {
   Set<String> keys = prefs.getKeys();
   for (String key in keys) {
     if (key.endsWith('_goal')) {
+      if (key == "Step_goal") continue;
       int? temp = prefs.getInt('${(key.split('_'))[0]}_timeToday') ?? 0;
       double val = temp / prefs.getInt(key)!;
 

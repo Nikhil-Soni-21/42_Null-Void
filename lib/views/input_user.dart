@@ -1,5 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:tracker_app/views/character_selection.dart';
 import 'package:tracker_app/views/formWidgets.dart';
+
+import 'dashboard.dart';
 
 class inputUser extends StatefulWidget {
   const inputUser({Key? key}) : super(key: key);
@@ -97,7 +101,7 @@ class _inputUserState extends State<inputUser> {
                     Expanded(
                       flex: 4,
                       child: Slider(
-                          label: sideProjectSliderValue.toString()+ " Hrs",
+                          label: _workSliderValue.toString() + " Hrs",
                           value: _workSliderValue,
                           min: 0,
                           max: 8,
@@ -128,7 +132,7 @@ class _inputUserState extends State<inputUser> {
                     Expanded(
                       flex: 4,
                       child: Slider(
-                        label: sideProjectSliderValue.toString()+ " Hrs",
+                          label: sideProjectSliderValue.toString() + " Hrs",
                           value: sideProjectSliderValue,
                           min: 0,
                           max: 8,
@@ -159,7 +163,10 @@ class _inputUserState extends State<inputUser> {
                     Expanded(
                       flex: 4,
                       child: Slider(
-                        label: double.parse(stepTargetSliderValue.toStringAsFixed(0)).toInt().toString(),
+                          label: double.parse(
+                                  stepTargetSliderValue.toStringAsFixed(0))
+                              .toInt()
+                              .toString(),
                           value: stepTargetSliderValue,
                           min: 1000,
                           max: 24000,
@@ -178,7 +185,11 @@ class _inputUserState extends State<inputUser> {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    ElevatedButton(onPressed: () {}, child: Text("Save"))
+                    ElevatedButton(
+                        onPressed: () {
+                          saveData();
+                        },
+                        child: Text("Save"))
                   ],
                 )
               ],
@@ -208,5 +219,49 @@ class _inputUserState extends State<inputUser> {
   String? _validateWeight(String? val) {
     if (val == null || val.length == 0) return "Weight cannot be empty";
     return null;
+  }
+
+  Future<void> saveData() async {
+    if (NameController.text == "" &&
+        AgeController.text == "" &&
+        HeightController.text == "" &&
+        WeightController.text == "") {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text("Please add all values. :("),
+        ),
+      );
+      return;
+    }
+
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    prefs.setString("userName", NameController.text);
+    prefs.setString("userAge", AgeController.text);
+    prefs.setString("userHeight", HeightController.text);
+    prefs.setString("userWeight", WeightController.text);
+
+    prefs.setInt("Work_goal", hoursToMilliseconds(_workSliderValue));
+    prefs.setInt(
+        "Side Project_goal", hoursToMilliseconds(sideProjectSliderValue));
+    prefs.setDouble("Step_goal", stepTargetSliderValue);
+
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text("Values Saved Successfully"),
+      ),
+    );
+
+    Navigator.push(
+        context, MaterialPageRoute(builder: (context) => characterSelection()));
+  }
+
+  int hoursToMilliseconds(double val) {
+    int res = 0;
+    res += int.parse(val.toString().split('.')[0]) * 3600000;
+    if (int.parse(val.toString().split('.')[1]) != 0) {
+      res += int.parse(val.toString().split('.')[1]) * 60 * 60000;
+    }
+    print("RES: $res");
+    return res;
   }
 }
