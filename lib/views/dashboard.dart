@@ -1,6 +1,7 @@
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:pedometer/pedometer.dart';
 import 'package:liquid_progress_indicator/liquid_progress_indicator.dart';
 import 'package:rive/rive.dart';
@@ -19,7 +20,8 @@ class DashboardPage extends StatefulWidget {
   _DashboardPageState createState() => _DashboardPageState();
 }
 
-class _DashboardPageState extends State<DashboardPage> {
+class _DashboardPageState extends State<DashboardPage>
+    with WidgetsBindingObserver {
   late Future<Quote> quote;
   late final Stream<StepCount> _stepCountStream;
   Map<String, int> carouselData = Map();
@@ -233,7 +235,15 @@ class _DashboardPageState extends State<DashboardPage> {
                           builder: (context) => StopwatchPage(
                                 activityType: "Work",
                                 colorTheme: Colors.yellow,
-                              )));
+                              ))).then((value) {
+                    setState(() {
+                      getCarouselData().then((value) async {
+                        carouselData = value;
+                        totalScore = await calculateScore(value);
+                        setState(() {});
+                      });
+                    });
+                  });
                 },
                 style: buttonStyle,
                 child: Padding(
@@ -259,11 +269,8 @@ class _DashboardPageState extends State<DashboardPage> {
                 )),
             ElevatedButton(
                 onPressed: () {
-                  Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) =>
-                              exercise()));
+                  Navigator.push(context,
+                      MaterialPageRoute(builder: (context) => exercise()));
                 },
                 style: buttonStyle,
                 child: Padding(
@@ -297,7 +304,15 @@ class _DashboardPageState extends State<DashboardPage> {
                         colorTheme: Colors.yellow,
                       ),
                     ),
-                  );
+                  ).then((value) {
+                    setState(() {
+                      getCarouselData().then((value) async {
+                        carouselData = value;
+                        totalScore = await calculateScore(value);
+                        setState(() {});
+                      });
+                    });
+                  });
                 },
                 style: buttonStyle,
                 child: Padding(

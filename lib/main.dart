@@ -11,6 +11,6 @@ void main() {
       primaryColor: Colors.blue,
       scaffoldBackgroundColor: Color(0xFF2A2F3A),
     ),
-    home: inputUser(),
+    home: DashboardPage(),
   ));
 }
