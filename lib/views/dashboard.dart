@@ -6,7 +6,6 @@ import 'package:pedometer/pedometer.dart';
 import 'package:liquid_progress_indicator/liquid_progress_indicator.dart';
 import 'package:rive/rive.dart';
 import 'package:shimmer/shimmer.dart';
-import 'package:tracker_app/repos/alarms.dart';
 import 'package:tracker_app/repos/quotes_api.dart';
 import 'package:tracker_app/repos/storage_api.dart';
 import 'package:tracker_app/views/exercise.dart';
@@ -42,13 +41,11 @@ class _DashboardPageState extends State<DashboardPage>
       print(error);
     });
 
-    getCarouselData().then((value) async {
+    getCarouselData().then((value) {
       carouselData = value;
       totalScore = await calculateScore(value);
       setState(() {});
     });
-
-    setMidnightAlarm();
     super.initState();
   }
 
