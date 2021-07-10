@@ -24,6 +24,7 @@ class _DashboardPageState extends State<DashboardPage>
   late Future<Quote> quote;
   late final Stream<StepCount> _stepCountStream;
   Map<String, int> carouselData = Map();
+  Map<String, String?> avatarInfo = Map();
   int steps = 0;
   double? totalScore;
   @override
@@ -40,6 +41,10 @@ class _DashboardPageState extends State<DashboardPage>
       print(error);
     });
 
+    getAvatarData().then((value) {
+      avatarInfo = value;
+      setState(() {});
+    });
     getCarouselData().then((value) async {
       carouselData = value;
       totalScore = await calculateScore(value);
@@ -176,9 +181,21 @@ class _DashboardPageState extends State<DashboardPage>
   }
 
   Widget _avatar() {
+    String mood = "happy";
+    if (totalScore == null) return Container();
+    if (totalScore! < 33) {
+      mood = "sad";
+    }
+    if (totalScore! < 6) {
+      mood = "normal";
+    }
+
+    String gender = avatarInfo["avatarGender"] ?? "male";
+    print("gender${gender}_$mood.riv ");
     return Flexible(
       child: SizedBox(
-          height: 300, child: RiveAnimation.asset("assets/mood_sad.riv")),
+          height: 300,
+          child: RiveAnimation.asset("assets/${gender}_$mood.riv")),
     );
   }
 

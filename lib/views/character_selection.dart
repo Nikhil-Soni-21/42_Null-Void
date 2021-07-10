@@ -122,16 +122,14 @@ class _characterSelectionState extends State<characterSelection> {
   Widget _avatarMale() {
     return Flexible(
       child: SizedBox(
-          height: 300,
-          child: RiveAnimation.asset("assets/male_mood_happy.riv")),
+          height: 300, child: RiveAnimation.asset("assets/male_happy.riv")),
     );
   }
 
   Widget _avatarFemale() {
     return Flexible(
       child: SizedBox(
-          height: 300,
-          child: RiveAnimation.asset("assets/female_happy_mood.riv")),
+          height: 300, child: RiveAnimation.asset("assets/female_happy.riv")),
     );
   }
 

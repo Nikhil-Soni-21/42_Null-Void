@@ -17,6 +17,15 @@ Future<Map<String, int>> getCarouselData() async {
   return data;
 }
 
+Future<Map<String, String?>> getAvatarData() async {
+  Map<String, String?> data = Map();
+  SharedPreferences prefs = await SharedPreferences.getInstance();
+
+  data["avatarName"] = prefs.getString("avatarName");
+  data["avatarGender"] = prefs.getString("avatarGender");
+  return data;
+}
+
 Future<void> setDummyData() async {
   SharedPreferences prefs = await SharedPreferences.getInstance();
   prefs.setInt("Work_goal", 180000);
