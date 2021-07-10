@@ -19,6 +19,9 @@ Future<List<Videos>> getVideos(String type) async {
     var responseBody = response.body;
     var jsonBody = json.decode(responseBody);
 
+    if(type=='exercise'){
+      myModel.add(new Videos(title: '?', image: '?', link: '?'));
+    }
     for(var data in jsonBody){
       myModel.add(new Videos(title: data['title'], image: data['image'], link: data['link']));
     }
