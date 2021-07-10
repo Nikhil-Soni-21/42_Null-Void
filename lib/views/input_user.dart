@@ -249,6 +249,9 @@ class _inputUserState extends State<inputUser> {
         "Side Project_goal", hoursToMilliseconds(sideProjectSliderValue));
     prefs.setDouble("Step_goal", stepTargetSliderValue);
 
+    prefs.setInt("Exercise_goal", 6);
+    prefs.setInt("Exercise_timeToday", 0);
+
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
         content: Text("Values Saved Successfully"),
@@ -260,12 +263,13 @@ class _inputUserState extends State<inputUser> {
   }
 
   int hoursToMilliseconds(double val) {
-    int res = 0;
-    res += int.parse(val.toString().split('.')[0]) * 3600000;
+    int hours = int.parse(val.toString().split('.')[0]);
+    int minutes = 0;
     if (int.parse(val.toString().split('.')[1]) != 0) {
-      res += int.parse(val.toString().split('.')[1]) * 60 * 60000;
+      if (int.parse(val.toString().split('.')[1]) == 25) minutes = 15;
+      if (int.parse(val.toString().split('.')[1]) == 25) minutes = 30;
+      if (int.parse(val.toString().split('.')[1]) == 25) minutes = 45;
     }
-    print("RES: $res");
-    return res;
+    return Duration(hours: hours, minutes: minutes).inMilliseconds;
   }
 }
