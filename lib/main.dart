@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:tracker_app/views/splash.dart';
 
 void main() {
@@ -12,4 +13,6 @@ void main() {
     ),
     home: Splash(),
   ));
+  
+  SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(systemNavigationBarColor: Color(0xFF2A2F3A)));
 }

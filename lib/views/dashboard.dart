@@ -1,15 +1,13 @@
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
-import 'package:pedometer/pedometer.dart';
 import 'package:liquid_progress_indicator/liquid_progress_indicator.dart';
+import 'package:pedometer/pedometer.dart';
 import 'package:rive/rive.dart';
 import 'package:shimmer/shimmer.dart';
 import 'package:tracker_app/repos/quotes_api.dart';
 import 'package:tracker_app/repos/storage_api.dart';
 import 'package:tracker_app/views/stopwatchPage.dart';
-import 'package:tracker_app/views/yogaRoutine.dart';
 import 'package:tracker_app/views/yoga_exercise.dart';
 
 class DashboardPage extends StatefulWidget {
@@ -285,13 +283,21 @@ class _DashboardPageState extends State<DashboardPage>
             ElevatedButton(
                 onPressed: () {
                   Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => StopwatchPage(
-                          activityType: "Work",
-                          colorTheme: Colors.yellow,
-                        ),
-                      ));
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => YogaExercise(
+                        type: 'Exercise',
+                      ),
+                    ),
+                  ).then((value) {
+                    setState(() {
+                      getCarouselData().then((value) async {
+                        carouselData = value;
+                        totalScore = await calculateScore(value);
+                        setState(() {});
+                      });
+                    });
+                  });
                 },
                 style: buttonStyle,
                 child: Padding(
@@ -537,39 +543,39 @@ class _DashboardPageState extends State<DashboardPage>
     );
   }
 
-  Widget _carouselYogaProgress() {
-    var steps = 0.3;
-    return Card(
-      color: Colors.black,
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-      child: Padding(
-        padding: EdgeInsets.all(16),
-        child: Row(
-          mainAxisSize: MainAxisSize.max,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            SizedBox(
-              width: 100,
-              height: 100,
-              child: CircularProgressIndicator(
-                value: steps,
-                strokeWidth: 6,
-                backgroundColor: Theme.of(context).scaffoldBackgroundColor,
-                valueColor: AlwaysStoppedAnimation(Colors.greenAccent),
-              ),
-            ),
-            Padding(
-              padding: const EdgeInsets.only(left: 40.0, top: 24),
-              child: Text(
-                "Yoga Progress",
-                style: TextStyle(fontSize: 24.0, color: Colors.white),
-              ),
-            )
-          ],
-        ),
-      ),
-    );
-  }
+  // Widget _carouselYogaProgress() {
+  //   var steps = 0.3;
+  //   return Card(
+  //     color: Colors.black,
+  //     shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+  //     child: Padding(
+  //       padding: EdgeInsets.all(16),
+  //       child: Row(
+  //         mainAxisSize: MainAxisSize.max,
+  //         crossAxisAlignment: CrossAxisAlignment.start,
+  //         children: [
+  //           SizedBox(
+  //             width: 100,
+  //             height: 100,
+  //             child: CircularProgressIndicator(
+  //               value: steps,
+  //               strokeWidth: 6,
+  //               backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+  //               valueColor: AlwaysStoppedAnimation(Colors.greenAccent),
+  //             ),
+  //           ),
+  //           Padding(
+  //             padding: const EdgeInsets.only(left: 40.0, top: 24),
+  //             child: Text(
+  //               "Yoga Progress",
+  //               style: TextStyle(fontSize: 24.0, color: Colors.white),
+  //             ),
+  //           )
+  //         ],
+  //       ),
+  //     ),
+  //   );
+  // }
 
   Widget _carousalStepsTarget() {
     double? steps = 0;
@@ -601,11 +607,11 @@ class _DashboardPageState extends State<DashboardPage>
                   child: Column(
                     children: [
                       Text(
-                        "Steps Target:",
+                        "Steps Target:\n",
                         style: TextStyle(fontSize: 24.0, color: Colors.white),
                       ),
                       Text(
-                        "${carouselData["Step_goal"] ?? "Pedometer not Available"}",
+                        "${carouselData["Step_goal"] ?? "Pedometer\nnot Available"}",
                         style: TextStyle(fontSize: 18.0, color: Colors.white),
                       ),
                     ],

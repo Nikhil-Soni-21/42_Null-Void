@@ -74,7 +74,7 @@ class _YogaExerciseRoutinePageState extends State<YogaExerciseRoutinePage>
     if (temp == null) {
       prefs.setInt("Exercise_timeToday", 0);
     } else
-      prefs.setInt("Exercise_timeToday", temp++);
+      prefs.setInt("Exercise_timeToday", ++temp);
   }
 
   @override

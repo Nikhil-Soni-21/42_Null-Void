@@ -208,6 +208,8 @@ class _StopwatchPageState extends State<StopwatchPage>
       ),
     );
 
+    _playController.reverse();
+
     _riveAnimationController.isActive = false;
 
     //saving to storage
