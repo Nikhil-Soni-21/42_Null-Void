@@ -8,6 +8,7 @@ import 'package:shimmer/shimmer.dart';
 import 'package:tracker_app/repos/alarms.dart';
 import 'package:tracker_app/repos/quotes_api.dart';
 import 'package:tracker_app/repos/storage_api.dart';
+import 'package:tracker_app/views/exercise.dart';
 import 'package:tracker_app/views/stopwatchPage.dart';
 import 'package:tracker_app/views/yoga.dart';
 
@@ -257,7 +258,13 @@ class _DashboardPageState extends State<DashboardPage> {
                   ),
                 )),
             ElevatedButton(
-                onPressed: () {},
+                onPressed: () {
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) =>
+                              exercise()));
+                },
                 style: buttonStyle,
                 child: Padding(
                   padding: const EdgeInsets.symmetric(
