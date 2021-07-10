@@ -24,7 +24,6 @@ class _DashboardPageState extends State<DashboardPage>
   late Future<Quote> quote;
   late final Stream<StepCount> _stepCountStream;
   Map<String, int> carouselData = Map();
-  Map<String, String?> avatarInfo = Map();
   int steps = 0;
   double? totalScore;
   @override
@@ -41,10 +40,6 @@ class _DashboardPageState extends State<DashboardPage>
       print(error);
     });
 
-    getAvatarData().then((value) {
-      avatarInfo = value;
-      setState(() {});
-    });
     getCarouselData().then((value) async {
       carouselData = value;
       totalScore = await calculateScore(value);
@@ -86,8 +81,7 @@ class _DashboardPageState extends State<DashboardPage>
                     _carouselExerciseProgress(),
                     _carouselWorkProgress(),
                     _carouselSideProjectsProgress(),
-                    _carouselYogaProgress(),
-                    _carousalStepsTarget(),
+                    _carouselYogaProgress()
                   ],
                   options: CarouselOptions(
                       height: 180,
@@ -182,21 +176,9 @@ class _DashboardPageState extends State<DashboardPage>
   }
 
   Widget _avatar() {
-    String mood = "happy";
-    if (totalScore == null) return Container();
-    if (totalScore! < 33) {
-      mood = "sad";
-    }
-    if (totalScore! < 6) {
-      mood = "normal";
-    }
-
-    String gender = avatarInfo["avatarGender"] ?? "male";
-    print("gender${gender}_$mood.riv ");
     return Flexible(
       child: SizedBox(
-          height: 300,
-          child: RiveAnimation.asset("assets/${gender}_$mood.riv")),
+          height: 300, child: RiveAnimation.asset("assets/mood_sad.riv")),
     );
   }
 
@@ -287,7 +269,7 @@ class _DashboardPageState extends State<DashboardPage>
                   Navigator.push(
                       context,
                       MaterialPageRoute(
-                          builder: (context) => YogaExerciseRoutinePage()));
+                          builder: (context) => YogaExercise(type: 'Exercise')));
                 },
                 style: buttonStyle,
                 child: Padding(
@@ -546,40 +528,6 @@ class _DashboardPageState extends State<DashboardPage>
               padding: const EdgeInsets.only(left: 40.0, top: 24),
               child: Text(
                 "Yoga Progress",
-                style: TextStyle(fontSize: 24.0, color: Colors.white),
-              ),
-            )
-          ],
-        ),
-      ),
-    );
-  }
-
-  Widget _carousalStepsTarget() {
-    var steps = 0.3;
-    return Card(
-      color: Colors.black,
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-      child: Padding(
-        padding: EdgeInsets.all(16),
-        child: Row(
-          mainAxisSize: MainAxisSize.max,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            SizedBox(
-              width: 100,
-              height: 100,
-              child: CircularProgressIndicator(
-                value: steps,
-                strokeWidth: 6,
-                backgroundColor: Theme.of(context).scaffoldBackgroundColor,
-                valueColor: AlwaysStoppedAnimation(Colors.amber),
-              ),
-            ),
-            Padding(
-              padding: const EdgeInsets.only(left: 40.0, top: 24),
-              child: Text(
-                "Steps Target:",
                 style: TextStyle(fontSize: 24.0, color: Colors.white),
               ),
             )
