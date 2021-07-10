@@ -1,21 +1,31 @@
 import 'dart:convert';
+
 import 'package:http/http.dart' as http;
 
-Future<Videos> getVideos(String type) async {
+Future<List<Videos>> getVideos(String type) async {
   final http.Response response = await http.get(
     Uri.parse(
-        'https://script.google.com/macros/s/AKfycbx5k6Ec05KnEIe9BN1f-XZfKVhOkvNVnWITz1rBBp1twdtBpKQ/exec?type=$type'),
+        'https://script.google.com/macros/s/AKfycbzoqr-gdu7_dJJOQXztsiEr98cO3aDipXjgQo0ltI9v6EJlV-U/exec?type=$type'),
     headers: <String, String>{
       'accept': 'application/json',
     },
   );
 
+  List<Videos> myModel = [];
+
   if (response.statusCode == 200) {
-    print("Quote api call successful");
-    return Videos.fromJson(response.body);
+    print("Video api call successful");
+
+    var responseBody = response.body;
+    var jsonBody = json.decode(responseBody);
+
+    for(var data in jsonBody){
+      myModel.add(new Videos(title: data['title'], image: data['image'], link: data['link']));
+    }
+    return myModel;
   } else {
-    print("Quote api call FAILED");
-    return Videos(title: "null", image: "null", link: "null");
+    print("Video api call FAILED");
+    return [];
   }
 }
 

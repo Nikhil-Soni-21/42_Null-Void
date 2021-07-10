@@ -5,7 +5,6 @@ import 'package:pedometer/pedometer.dart';
 import 'package:liquid_progress_indicator/liquid_progress_indicator.dart';
 import 'package:rive/rive.dart';
 import 'package:shimmer/shimmer.dart';
-import 'package:tracker_app/repos/alarms.dart';
 import 'package:tracker_app/repos/quotes_api.dart';
 import 'package:tracker_app/repos/storage_api.dart';
 import 'package:tracker_app/views/exercise.dart';
@@ -39,13 +38,11 @@ class _DashboardPageState extends State<DashboardPage> {
       print(error);
     });
 
-    getCarouselData().then((value) async {
+    getCarouselData().then((value) {
       carouselData = value;
-      totalScore = await calculateScore(value);
+      totalScore = calculateScore(value);
       setState(() {});
     });
-
-    setMidnightAlarm();
     super.initState();
   }
 
@@ -179,7 +176,7 @@ class _DashboardPageState extends State<DashboardPage> {
   Widget _avatar() {
     return Flexible(
       child: SizedBox(
-          height: 300, child: RiveAnimation.asset("assets/male_mood_sad.riv")),
+          height: 300, child: RiveAnimation.asset("assets/mood_sad.riv")),
     );
   }
 
@@ -290,14 +287,12 @@ class _DashboardPageState extends State<DashboardPage> {
             ElevatedButton(
                 onPressed: () {
                   Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => StopwatchPage(
-                        activityType: "Side Project",
-                        colorTheme: Colors.yellow,
-                      ),
-                    ),
-                  );
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => StopwatchPage(
+                                activityType: "Side Project",
+                                colorTheme: Colors.yellow,
+                              ),),);
                 },
                 style: buttonStyle,
                 child: Padding(
@@ -324,7 +319,10 @@ class _DashboardPageState extends State<DashboardPage> {
             ElevatedButton(
               onPressed: () {
                 Navigator.push(
-                    context, MaterialPageRoute(builder: (context) => yoga()));
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) =>
+                            yoga()));
               },
               style: buttonStyle,
               child: Padding(
@@ -540,24 +538,12 @@ class _DashboardPageState extends State<DashboardPage> {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Image.asset(
-                "assets/happy_smiley.png",
-                height: 24,
-                width: 24,
-              ),
+              Image.asset("assets/happy_smiley.png", height: 24,width: 24,),
               Padding(
                 padding: const EdgeInsets.only(top: 64.0, bottom: 64.0),
-                child: Image.asset(
-                  "assets/normal_smiley.png",
-                  height: 24,
-                  width: 24,
-                ),
+                child: Image.asset("assets/normal_smiley.png",height: 24,width: 24,),
               ),
-              Image.asset(
-                "assets/sad_smiley.png",
-                height: 24,
-                width: 24,
-              ),
+              Image.asset("assets/sad_smiley.png",height: 24,width: 24,),
             ],
           ),
         ),
