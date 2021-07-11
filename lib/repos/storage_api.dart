@@ -51,7 +51,11 @@ Future<double> calculateScore(Map<String, int> data) async {
     if (key.endsWith('_goal')) {
       if (key == "Step_goal") continue;
       int? temp = prefs.getInt('${(key.split('_'))[0]}_timeToday') ?? 0;
-      double val = temp / prefs.getInt(key)!;
+      var kv = prefs.getInt(key);
+      if(kv?.isNaN==true){
+        continue;
+      }
+      double val = temp / kv!;
 
       avg += val;
 

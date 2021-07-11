@@ -11,8 +11,8 @@ class inputUser extends StatefulWidget {
 }
 
 class _inputUserState extends State<inputUser> {
-  double _workSliderValue = 0;
-  double sideProjectSliderValue = 0;
+  double _workSliderValue = 1;
+  double sideProjectSliderValue = 1;
   double stepTargetSliderValue = 1000;
 
   var _formKey = GlobalKey<FormState>();
@@ -239,18 +239,18 @@ class _inputUserState extends State<inputUser> {
     }
 
     SharedPreferences prefs = await SharedPreferences.getInstance();
-    prefs.setString("userName", NameController.text);
-    prefs.setString("userAge", AgeController.text);
-    prefs.setString("userHeight", HeightController.text);
-    prefs.setString("userWeight", WeightController.text);
+    await prefs.setString("userName", NameController.text);
+    await prefs.setString("userAge", AgeController.text);
+    await prefs.setString("userHeight", HeightController.text);
+    await prefs.setString("userWeight", WeightController.text);
 
-    prefs.setInt("Work_goal", hoursToMilliseconds(_workSliderValue));
-    prefs.setInt(
+    await prefs.setInt("Work_goal", hoursToMilliseconds(_workSliderValue));
+    await prefs.setInt(
         "Side Project_goal", hoursToMilliseconds(sideProjectSliderValue));
-    prefs.setDouble("Step_goal", stepTargetSliderValue);
+    await prefs.setDouble("Step_goal", stepTargetSliderValue);
 
-    prefs.setInt("Exercise_goal", 6);
-    prefs.setInt("Exercise_timeToday", 0);
+    await prefs.setInt("Exercise_goal", 6);
+    await prefs.setInt("Exercise_timeToday", 0);
 
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(

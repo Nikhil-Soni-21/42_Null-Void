@@ -138,16 +138,16 @@ class _characterSelectionState extends State<characterSelection> {
     }
 
     SharedPreferences prefs = await SharedPreferences.getInstance();
-    prefs.setString("avatarName", CharacterNameController.text);
-    if (selected == 1) prefs.setString("avatarGender", "male");
-    if (selected == 2) prefs.setString("avatarGender", "female");
+    await prefs.setString("avatarName", CharacterNameController.text);
+    if (selected == 1) await prefs.setString("avatarGender", "male");
+    if (selected == 2) await prefs.setString("avatarGender", "female");
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
         content: Text("Your avatar is ready!!"),
       ),
     );
 
-    prefs.setBool("first_time", false);
+    await prefs.setBool("first_time", false);
     Navigator.push(
         context, MaterialPageRoute(builder: (context) => DashboardPage()));
   }
